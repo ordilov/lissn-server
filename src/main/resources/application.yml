@@ -8,8 +8,25 @@ spring:
     username: sa
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    properties.hibernate.hbm2ddl.auto: update
-    showSql: true
-  h2:
-    console:
-      enabled: true
+    properties:
+      hibernate:
+        hbm2ddl.auto: update
+        format_sql: true
+        show_sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: {client-id}
+            client-secret: {client-secret}
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+
+auth:
+  token-secret: {token-secret}
+  token-expiration: {token-expiration}
+  authorized-redirect-urls:
+    - {authorizedRedirectUrl}
