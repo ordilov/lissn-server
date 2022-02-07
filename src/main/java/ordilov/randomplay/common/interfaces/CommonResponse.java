@@ -1,4 +1,4 @@
-package ordilov.randomplay.common;
+package ordilov.randomplay.common.interfaces;
 
 import lombok.Builder;
 import lombok.Getter;
