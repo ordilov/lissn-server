@@ -1,17 +1,19 @@
 package ordilov.randomplay.security.config;
 
 import lombok.RequiredArgsConstructor;
-import ordilov.randomplay.security.userinfo.CustomOAuth2UserService;
 import ordilov.randomplay.security.HttpCookieOAuth2AuthorizationRequestRepository;
+import ordilov.randomplay.security.filter.TokenAuthenticationFilter;
 import ordilov.randomplay.security.handler.OAuth2AuthenticationFailureHandler;
 import ordilov.randomplay.security.handler.OAuth2AuthenticationSuccessHandler;
-import ordilov.randomplay.security.filter.TokenAuthenticationFilter;
+import ordilov.randomplay.security.userinfo.CustomOAuth2UserService;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -20,6 +22,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private final CustomOAuth2UserService customOAuth2UserService;
   private final TokenAuthenticationFilter tokenAuthenticationFilter;
   private final AuthenticationEntryPoint restAuthenticationEntryPoint;
+  private final ClientRegistrationRepository clientRegistrationRepository;
+  private final CustomAuthorizationRequestResolver customAuthorizationRequestResolver;
   private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
   private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
   private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
@@ -61,6 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .oauth2Login()
         .authorizationEndpoint()
         .baseUri("/oauth2/authorize")
+        .authorizationRequestResolver(customAuthorizationRequestResolver)
         .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
         .and()
         .redirectionEndpoint()
@@ -72,7 +77,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .successHandler(oAuth2AuthenticationSuccessHandler)
         .failureHandler(oAuth2AuthenticationFailureHandler);
 
-//    http.addFilterBefore(tokenAuthenticationFilter, OAuth2LoginAuthenticationFilter.class);
-    http.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(tokenAuthenticationFilter, OAuth2LoginAuthenticationFilter.class);
+  }
+
+  @Override
+  public void configure(WebSecurity web) {
+    web
+        .ignoring()
+        .antMatchers("/v2/api-docs/**", "/swagger-resources/**",
+            "/swagger-ui.html", "/webjars/**", "/swagger/**", "/h2-console/**");
+
   }
 }
