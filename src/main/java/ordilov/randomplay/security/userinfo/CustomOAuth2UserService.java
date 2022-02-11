@@ -1,20 +1,16 @@
 package ordilov.randomplay.security.userinfo;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ordilov.randomplay.member.domain.Member;
-import ordilov.randomplay.member.domain.MemberReader;
-import ordilov.randomplay.member.domain.MemberStore;
+import ordilov.randomplay.member.application.MemberFacade;
+import ordilov.randomplay.member.domain.AuthProvider;
+import ordilov.randomplay.member.domain.MemberInfo;
 import ordilov.randomplay.security.exception.OAuth2AuthenticationProcessingException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -24,8 +20,7 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-  private final MemberStore memberStore;
-  private final MemberReader memberReader;
+  private final MemberFacade memberFacade;
 
   @Override
   public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest)
@@ -42,30 +37,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
   }
 
   private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
-    String provider = oAuth2UserRequest.getClientRegistration().getRegistrationId();
+    AuthProvider provider = AuthProvider.valueOf(
+        oAuth2UserRequest.getClientRegistration().getRegistrationId());
     OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(provider, oAuth2User);
+
     if (!StringUtils.hasText(oAuth2UserInfo.getEmail())) {
-      throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
+      throw new OAuth2AuthenticationProcessingException("OAuth2 인증 정보에 이메일이 존재하지 않습니다.");
     }
 
-    Optional<Member> memberOptional = memberReader.getMemberByEmail(oAuth2UserInfo.getEmail());
-    memberOptional.ifPresentOrElse(
-        member -> updateExistingUser(member, oAuth2UserInfo),
-        () -> registerMember(oAuth2UserRequest, oAuth2UserInfo)
-    );
-
-    Map<String, Object> attributes = new HashMap<>(oAuth2User.getAttributes());
-    attributes.put("provider", provider);
-    return new DefaultOAuth2User(oAuth2User.getAuthorities(), attributes, "name");
+    MemberInfo memberInfo = memberFacade.login(oAuth2UserInfo.of());
+    return new UserPrincipal(memberInfo, oAuth2User);
   }
-
-  private void registerMember(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
-    memberStore.store(
-        oAuth2UserInfo.toEntity(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
-  }
-
-  private void updateExistingUser(Member existingUser, OAuth2UserInfo oAuth2UserInfo) {
-    memberStore.update(existingUser, oAuth2UserInfo.of());
-  }
-
 }

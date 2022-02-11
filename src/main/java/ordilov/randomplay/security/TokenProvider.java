@@ -10,9 +10,8 @@ import java.security.Key;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import ordilov.randomplay.config.AppProperties;
-import ordilov.randomplay.security.userinfo.OAuth2UserInfoFactory;
+import ordilov.randomplay.security.userinfo.UserPrincipal;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -28,18 +27,17 @@ public class TokenProvider {
   }
 
   public String createToken(Authentication authentication) {
-    OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+    UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
     Date now = new Date();
     Date expiryDate = new Date(now.getTime() + EXPIRED_TIME_IN_MILLISECONDS);
-    String provider = oauth2User.getAttribute("provider");
 
     return Jwts.builder()
         .signWith(key)
         .setIssuedAt(now)
         .setExpiration(expiryDate)
-        .setClaims(OAuth2UserInfoFactory.getOAuth2UserInfo(provider, oauth2User).toClaims())
-        .setSubject(oauth2User.getAttributes().get("sub").toString())
+        .setClaims(userPrincipal.toClaims())
+        .setSubject(userPrincipal.getId().toString())
         .compact();
   }
 

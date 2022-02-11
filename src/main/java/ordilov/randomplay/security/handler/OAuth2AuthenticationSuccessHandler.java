@@ -10,9 +10,14 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ordilov.randomplay.common.interfaces.CookieUtils;
+import ordilov.randomplay.member.application.MemberFacade;
 import ordilov.randomplay.security.HttpCookieOAuth2AuthorizationRequestRepository;
 import ordilov.randomplay.security.TokenProvider;
+import ordilov.randomplay.security.userinfo.UserPrincipal;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -22,7 +27,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+  private final MemberFacade memberFacade;
   private final TokenProvider tokenProvider;
+  private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
   private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
   @Override
@@ -36,6 +43,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
       return;
     }
 
+    updateRefreshToken(authentication);
     clearAuthenticationAttributes(request, response);
     getRedirectStrategy().sendRedirect(request, response, targetUrl);
   }
@@ -59,5 +67,18 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         response);
   }
 
+  public void updateRefreshToken(Authentication authentication) {
+    UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+    OAuth2AuthorizedClient user = oAuth2AuthorizedClientService.loadAuthorizedClient(
+        principal.getProvider().name(),
+        authentication.getName());
+    OAuth2RefreshToken refreshToken = user.getRefreshToken();
+    if (refreshToken == null) {
+      return;
+    }
+
+    UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+    memberFacade.updateRefreshToken(userPrincipal.getId(), refreshToken.getTokenValue());
+  }
 
 }

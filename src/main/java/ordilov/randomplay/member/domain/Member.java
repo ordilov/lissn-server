@@ -1,11 +1,14 @@
 package ordilov.randomplay.member.domain;
 
+import static javax.persistence.FetchType.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,18 +35,17 @@ public class Member extends BaseEntity {
   private String name;
 
   @Email
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false, unique = true, length = 250)
   private String email;
   private String refreshToken;
   private String profileImageUrl;
 
   @Enumerated(EnumType.STRING)
   private AuthProvider provider;
-  private Boolean isDeleted;
+  private Boolean isDeleted = false;
 
-  @OneToMany(mappedBy = "member")
+  @OneToMany(mappedBy = "member", fetch = LAZY)
   private final List<Playlist> playlists = new ArrayList<>();
-
 
   @Builder
   public Member(String name, String email, String refreshToken, String profileImageUrl, AuthProvider provider) {
@@ -59,7 +61,11 @@ public class Member extends BaseEntity {
     this.profileImageUrl = command.getProfileImageUrl();
   }
 
-  public void addPlaylist(Playlist playlist) {
+  public void setRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
+  }
+
+  public void createPlaylist(Playlist playlist) {
     this.playlists.add(playlist);
   }
 }

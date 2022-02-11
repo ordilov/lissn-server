@@ -1,6 +1,7 @@
 package ordilov.randomplay.member.infrastructure;
 
 import java.util.Optional;
+import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import ordilov.randomplay.member.domain.Member;
 import ordilov.randomplay.member.domain.MemberReader;
@@ -13,8 +14,9 @@ public class MemberReaderImpl implements MemberReader {
   private final MemberRepository memberRepository;
 
   @Override
-  public Optional<Member> getMemberBy(String id) {
-    return memberRepository.findById(id);
+  public Member getMemberBy(Long id) {
+    return memberRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
   }
 
   @Override

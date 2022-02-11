@@ -6,17 +6,21 @@ import ordilov.randomplay.member.domain.MemberInfo;
 import ordilov.randomplay.member.domain.MemberService;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class MemberFacade {
-    private final MemberService memberService;
 
-    public MemberInfo registerMember(MemberCommand command) {
-        return memberService.login(command);
-    }
+  private final MemberService memberService;
 
-    public MemberInfo getMember(String memberId) {
-        return memberService.getMemberInfo(memberId);
-    }
+  public MemberInfo login(MemberCommand command) {
+    return memberService.login(command);
+  }
 
+  public MemberInfo getMember(Long memberId) {
+    return memberService.getMemberInfo(memberId);
+  }
+
+  public void updateRefreshToken(Long memberId, String refreshToken) {
+    memberService.updateRefreshToken(memberId, refreshToken);
+  }
 }
