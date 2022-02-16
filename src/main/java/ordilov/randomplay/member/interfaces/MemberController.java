@@ -27,12 +27,6 @@ public class MemberController {
     return CommonResponse.success(memberInfo);
   }
 
-  @GetMapping(value = "/{memberId}/playlists")
-  public CommonResponse<MemberInfo> findPlaylists(@PathVariable Long memberId) {
-    var memberInfo = memberFacade.getMember(memberId);
-    return CommonResponse.success(memberInfo);
-  }
-
   @GetMapping(value = "/me")
   @PreAuthorize("hasRole('USER')")
   public CommonResponse<MemberInfo> getCurrentUser(
