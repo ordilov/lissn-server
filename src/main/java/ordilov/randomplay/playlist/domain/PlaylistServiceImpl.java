@@ -14,6 +14,8 @@ import ordilov.randomplay.playlist.domain.PlaylistCommand.YoutubeVideoRequest;
 import ordilov.randomplay.playlist.domain.PlaylistInfo.Main;
 import ordilov.randomplay.playlist.domain.youtube.YoutubePlaylistItem;
 import ordilov.randomplay.playlist.domain.youtube.YoutubePlaylistItems;
+import ordilov.randomplay.playlist.domain.youtube.YoutubeVideo;
+import ordilov.randomplay.playlist.domain.youtube.YoutubeVideo.Item;
 import ordilov.randomplay.track.domain.Track;
 import ordilov.randomplay.track.domain.TrackStore;
 import org.springframework.stereotype.Service;
@@ -25,20 +27,27 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PlaylistServiceImpl implements PlaylistService {
 
+  private final PlaylistMapper mapper;
+  private final TrackStore trackStore;
+  private final MemberReader memberReader;
   private final PlaylistStore playlistStore;
   private final PlaylistReader playlistReader;
-  private final MemberReader memberReader;
-  private final PlaylistInfoMapper mapper;
-  private final TrackStore trackStore;
 
   @Override
-  public void addPlaylistItem(YoutubeVideoRequest command, String videoId) {
-//    Track track = trackStore.store(new Track());
-    PlaylistItem playlistItem = new PlaylistItem();
+  public void addPlaylistItem(YoutubeVideoRequest command, YoutubeVideo youtubeVideo) {
+    Item item = youtubeVideo.getItems().get(0);
+    Track track = trackStore.store(Track.builder().
+        title(item.getSnippet().getTitle()).
+        resourceId(item.getId()).
+        build());
+    Playlist playlist = playlistReader.getPlaylistBy(command.getPlaylistId());
+    PlaylistItem playlistItem = new PlaylistItem(playlist, track);
+    playlist.addPlaylistItem(playlistItem);
   }
 
   @Override
-  public Main addPlaylistItems(YoutubeListRequest command, YoutubePlaylistItems youtubePlaylistItems) {
+  public Main addPlaylistItems(YoutubeListRequest command,
+      YoutubePlaylistItems youtubePlaylistItems) {
     Playlist playlist = playlistReader.getPlaylistBy(command.getPlaylistId());
 
     List<PlaylistItem> playlistItems = youtubePlaylistItems.getItems().stream()
@@ -80,7 +89,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
   @Override
   public void updatePlaylistTitle(PlaylistUpdateRequest command) {
-
+    playlistStore.update(command.getPlaylistId(), command.getTitle());
   }
 
   @Override

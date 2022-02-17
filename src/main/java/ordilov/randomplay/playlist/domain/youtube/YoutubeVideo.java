@@ -1,20 +1,18 @@
 package ordilov.randomplay.playlist.domain.youtube;
 
+import java.util.List;
 import lombok.Getter;
 
 @Getter
 public class YoutubeVideo {
 
-  private String id;
   private String kind;
   private String etag;
-  private Snippet snippet;
-  private ContentDetails contentDetails;
-  private Statistics statistics;
-
+  private List<Item> items;
+  private PageInfo pageInfo;
 
   @Getter
-  private static class ContentDetails{
+  public static class ContentDetails{
     private String note;
     private String endAt;
     private String startAt;
@@ -22,11 +20,21 @@ public class YoutubeVideo {
   }
 
   @Getter
-  private static class Statistics{
+  public static class Statistics{
     private Long viewCount;
     private Long likeCount;
     private Long dislikeCount;
     private Long favoriteCount;
     private Long commentCount;
+  }
+
+  @Getter
+  public static class Item{
+    private String id;
+    private String kind;
+    private String etag;
+    private Snippet.Video snippet;
+    private ContentDetails contentDetails;
+    private Statistics statistics;
   }
 }

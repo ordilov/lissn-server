@@ -1,6 +1,8 @@
 package ordilov.randomplay.playlist.interfaces;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -15,15 +17,23 @@ public class PlaylistDto {
 
   @Getter
   @Setter
-  public static class CreateYoutubeRequest {
+  @ToString
+  public static class UpdateRequest {
+    private String title;
+  }
+
+  @Getter
+  @Setter
+  public static class AddPlaylistRequest {
     private Long playlistId;
     private String youtubePlaylistId;
   }
 
   @Getter
   @Setter
-  public static class CreateYoutubeVideoRequest {
-    private Long playlistId;
-    private String youtubeVideoUrl;
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class AddVideoRequest {
+    private String url;
   }
 }

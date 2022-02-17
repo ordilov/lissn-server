@@ -14,6 +14,9 @@ import ordilov.randomplay.playlist.domain.YoutubeApi;
 import ordilov.randomplay.playlist.domain.youtube.YoutubePlaylistItems;
 import ordilov.randomplay.playlist.domain.youtube.YoutubeVideo;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 @Component
@@ -39,9 +42,15 @@ public class YoutubeApiImpl implements YoutubeApi {
   }
 
   @Override
-  public YoutubeVideo getYoutubeVideo(String videoId, String accessToken) {
+  public YoutubeVideo getYoutubeVideo(String url, String accessToken) {
+    UriComponents uri = UriComponentsBuilder.fromHttpUrl(url).build();
+    MultiValueMap<String, String> queryParams = uri.getQueryParams();
+    String videoId = queryParams.getFirst("v");
+
     HttpUrl youtubePlaylistUrl = getDefaultYoutubeUrl()
         .addPathSegment("videos")
+        .addQueryParameter("id", videoId)
+        .addQueryParameter("part", "snippet")
         .build();
 
     Request request = getDefaultYoutubeRequest(accessToken)

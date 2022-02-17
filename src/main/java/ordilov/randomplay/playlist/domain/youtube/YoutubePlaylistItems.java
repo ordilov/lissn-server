@@ -24,11 +24,4 @@ public class YoutubePlaylistItems {
   private static class Status{
     private String privacyStatus;
   }
-
-  @Getter
-  private static class PageInfo{
-    private int totalResults;
-    private int resultsPerPage;
-  }
-
 }

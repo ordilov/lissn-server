@@ -19,6 +19,11 @@ public class PlaylistStoreImpl implements PlaylistStore {
   }
 
   @Override
+  public void update(Long playlistId, String title) {
+    playlistRepository.findById(playlistId).ifPresent(playlist -> playlist.updateTitle(title));
+  }
+
+  @Override
   public void storeItem(Playlist playlist, PlaylistItem playlistItem) {
 
   }
