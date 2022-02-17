@@ -1,6 +1,7 @@
 package ordilov.randomplay.playlist.domain.youtube;
 
 import lombok.Getter;
+import ordilov.randomplay.playlist.domain.youtube.Snippet.PlaylistItem;
 
 @Getter
 public class YoutubePlaylistItem {
@@ -8,7 +9,7 @@ public class YoutubePlaylistItem {
   private String kind;
   private String etag;
   private Status status;
-  private Snippet snippet;
+  private PlaylistItem snippet;
   private ContentDetails contentDetails;
 
   @Getter

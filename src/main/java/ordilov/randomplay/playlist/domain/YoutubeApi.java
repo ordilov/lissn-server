@@ -6,5 +6,5 @@ import ordilov.randomplay.playlist.domain.youtube.YoutubeVideo;
 public interface YoutubeApi {
   YoutubePlaylistItems getPlaylistItems(String playlistId, String accessToken);
 
-  YoutubeVideo getYoutubeVideo(String videoId, String accessToken);
+  YoutubeVideo getYoutubeVideo(String url, String accessToken);
 }

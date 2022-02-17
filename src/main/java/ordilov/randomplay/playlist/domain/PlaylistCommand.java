@@ -3,7 +3,8 @@ package ordilov.randomplay.playlist.domain;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ordilov.randomplay.member.domain.Member;
-import ordilov.randomplay.playlist.interfaces.PlaylistDto;
+import ordilov.randomplay.playlist.interfaces.PlaylistDto.AddPlaylistRequest;
+import ordilov.randomplay.playlist.interfaces.PlaylistDto.AddVideoRequest;
 
 @Getter
 public class PlaylistCommand {
@@ -30,7 +31,7 @@ public class PlaylistCommand {
     private final Long playlistId;
     private final String youtubePlaylistId;
 
-    public YoutubeListRequest(Long id, PlaylistDto.CreateYoutubeRequest request) {
+    public YoutubeListRequest(Long id, AddPlaylistRequest request) {
       this.memberId = id;
       this.playlistId = request.getPlaylistId();
       this.youtubePlaylistId = request.getYoutubePlaylistId();
@@ -42,14 +43,14 @@ public class PlaylistCommand {
 
     private final Long memberId;
     private final Long playlistId;
-    private final String youtubeVideoUrl;
+    private final String url;
 
     public YoutubeVideoRequest(Long id,
         Long playlistId,
-        PlaylistDto.CreateYoutubeVideoRequest request) {
+        AddVideoRequest request) {
       this.memberId = id;
-      this.playlistId = request.getPlaylistId();
-      this.youtubeVideoUrl = request.getYoutubeVideoUrl();
+      this.playlistId = playlistId;
+      this.url = request.getUrl();
     }
   }
 

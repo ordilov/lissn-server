@@ -7,6 +7,7 @@ import static lombok.AccessLevel.PROTECTED;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,6 +19,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ordilov.randomplay.common.domain.BaseEntity;
 import ordilov.randomplay.member.domain.Member;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Entity
@@ -34,12 +36,17 @@ public class Playlist extends BaseEntity {
   @JoinColumn(name = "member_id")
   private Member member;
 
+  @ColumnDefault("0")
   private int likeCount = 0;
 
   @Builder
   public Playlist(String title, Member member) {
     this.title = title;
     this.member = member;
+  }
+
+  public void updateTitle(String title) {
+    this.title = title;
   }
 
   public void addPlaylistItem(PlaylistItem playlistItem) {

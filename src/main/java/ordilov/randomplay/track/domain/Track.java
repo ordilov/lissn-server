@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ordilov.randomplay.common.domain.BaseEntity;
@@ -30,6 +31,7 @@ public class Track extends BaseEntity {
   private String resourceId;
   private String title;
 
+  @Builder
   public Track(String title, String resourceId) {
     this.title = title;
     this.resourceId = resourceId;

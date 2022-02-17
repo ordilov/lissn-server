@@ -6,7 +6,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
-public interface PlaylistInfoMapper {
+public interface PlaylistMapper {
 
   PlaylistInfo.Main of(Playlist playlist);
 
@@ -17,4 +17,6 @@ public interface PlaylistInfoMapper {
   PlaylistInfo.PlaylistItem of(PlaylistItem item);
 
   List<PlaylistInfo.Main> of(List<Playlist> playlists);
+
+
 }

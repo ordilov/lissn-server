@@ -9,26 +9,25 @@ import ordilov.randomplay.member.domain.MemberReader;
 import ordilov.randomplay.playlist.domain.PlaylistCommand;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.PlaylistDeleteRequest;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.PlaylistItemDeleteRequest;
+import ordilov.randomplay.playlist.domain.PlaylistCommand.PlaylistUpdateRequest;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.YoutubeListRequest;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.YoutubeVideoRequest;
 import ordilov.randomplay.playlist.domain.PlaylistInfo;
 import ordilov.randomplay.playlist.domain.PlaylistService;
 import ordilov.randomplay.playlist.domain.YoutubeApi;
 import ordilov.randomplay.playlist.domain.youtube.YoutubePlaylistItems;
+import ordilov.randomplay.playlist.domain.youtube.YoutubeVideo;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class PlaylistFacade {
 
-  private final MemberReader memberReader;
-  private final PlaylistService playlistService;
   private final GoogleApi googleApi;
   private final YoutubeApi youtubeApi;
+  private final MemberReader memberReader;
+  private final PlaylistService playlistService;
 
   public PlaylistInfo.Main createPlaylist(PlaylistCommand playlistCommand) {
     return playlistService.createPlaylist(playlistCommand);
@@ -39,21 +38,16 @@ public class PlaylistFacade {
   }
 
   public PlaylistInfo.Main addPlaylistItems(YoutubeListRequest command) {
-    Member member = memberReader.getMemberBy(command.getMemberId());
-    String refreshToken = member.getRefreshToken();
-    String accessToken = googleApi.getAccessToken(refreshToken);
-
+    String accessToken = getAccessToken(command.getMemberId());
     YoutubePlaylistItems youtubePlaylistItems = youtubeApi.getPlaylistItems(
         command.getYoutubePlaylistId(), accessToken);
-
     return playlistService.addPlaylistItems(command, youtubePlaylistItems);
   }
 
-  public void addPlaylistItem(YoutubeVideoRequest command){
-    UriComponents uri = UriComponentsBuilder.fromHttpUrl(command.getYoutubeVideoUrl()).build();
-    MultiValueMap<String, String> queryParams = uri.getQueryParams();
-    String videoId = queryParams.getFirst("v");
-    playlistService.addPlaylistItem(command, videoId);
+  public void addPlaylistItem(YoutubeVideoRequest command) {
+    String accessToken = getAccessToken(command.getMemberId());
+    YoutubeVideo youtubeVideo = youtubeApi.getYoutubeVideo(command.getUrl(), accessToken);
+    playlistService.addPlaylistItem(command, youtubeVideo);
   }
 
   public void deletePlaylist(PlaylistDeleteRequest command) {
@@ -63,4 +57,15 @@ public class PlaylistFacade {
   public void deletePlaylistItem(PlaylistItemDeleteRequest command) {
     playlistService.deletePlaylistItem(command);
   }
+
+  public void updatePlaylist(PlaylistUpdateRequest command) {
+    playlistService.updatePlaylistTitle(command);
+  }
+
+  private String getAccessToken(Long memberId) {
+    Member member = memberReader.getMemberBy(memberId);
+    String refreshToken = member.getRefreshToken();
+    return googleApi.getAccessToken(refreshToken);
+  }
+
 }

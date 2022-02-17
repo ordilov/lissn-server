@@ -7,10 +7,11 @@ import ordilov.randomplay.playlist.domain.PlaylistCommand.PlaylistUpdateRequest;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.YoutubeListRequest;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.YoutubeVideoRequest;
 import ordilov.randomplay.playlist.domain.youtube.YoutubePlaylistItems;
+import ordilov.randomplay.playlist.domain.youtube.YoutubeVideo;
 
 public interface PlaylistService {
 
-  void addPlaylistItem(YoutubeVideoRequest command, String videoId);
+  void addPlaylistItem(YoutubeVideoRequest command, YoutubeVideo youtubeVideo);
 
   PlaylistInfo.Main addPlaylistItems(YoutubeListRequest command,
       YoutubePlaylistItems youtubePlaylistItems);
