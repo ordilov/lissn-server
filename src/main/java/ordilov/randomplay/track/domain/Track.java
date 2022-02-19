@@ -7,13 +7,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ordilov.randomplay.common.domain.BaseEntity;
-import ordilov.randomplay.playlist.domain.Playlist;
+import org.hibernate.annotations.ColumnDefault;
 
 
 @Entity
@@ -21,7 +19,6 @@ import ordilov.randomplay.playlist.domain.Playlist;
 @NoArgsConstructor(access = PROTECTED)
 public class Track extends BaseEntity {
 
-  private int likeCount = 0;
   @Id
   @GeneratedValue(strategy = IDENTITY)
   @Column(name = "track_id", nullable = false)
@@ -31,9 +28,21 @@ public class Track extends BaseEntity {
   private String resourceId;
   private String title;
 
+  @ColumnDefault("0")
+  private int likeCount = 0;
+
   @Builder
   public Track(String title, String resourceId) {
     this.title = title;
     this.resourceId = resourceId;
+  }
+
+  public void addLikeCount(){
+    likeCount++;
+  }
+
+  public void removeLikeCount(){
+    if(likeCount <= 0) return;
+    likeCount--;
   }
 }

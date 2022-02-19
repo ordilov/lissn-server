@@ -9,20 +9,21 @@ import ordilov.randomplay.playlist.interfaces.PlaylistDto.AddVideoRequest;
 @Getter
 public class PlaylistCommand {
 
-  private final Long memberId;
-  private final String title;
-
-  public PlaylistCommand(Long memberId, String title) {
-    this.memberId = memberId;
-    this.title = title;
+  @Getter
+  @RequiredArgsConstructor
+  public static class PlaylistCreateRequest{
+    private final Long memberId;
+    private final String title;
+    public Playlist toEntity(Member member) {
+      return Playlist.builder()
+          .member(member)
+          .title(title)
+          .build();
+    }
   }
 
-  public Playlist toEntity(Member member) {
-    return Playlist.builder()
-        .member(member)
-        .title(title)
-        .build();
-  }
+
+
 
   @Getter
   public static class YoutubeListRequest {

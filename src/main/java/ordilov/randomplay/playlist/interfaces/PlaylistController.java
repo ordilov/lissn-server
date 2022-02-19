@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ordilov.randomplay.common.interfaces.CommonResponse;
 import ordilov.randomplay.playlist.application.PlaylistFacade;
-import ordilov.randomplay.playlist.domain.PlaylistCommand;
+import ordilov.randomplay.playlist.domain.PlaylistCommand.PlaylistCreateRequest;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.PlaylistDeleteRequest;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.PlaylistItemDeleteRequest;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.PlaylistUpdateRequest;
@@ -36,6 +36,17 @@ public class PlaylistController {
 
   private final PlaylistFacade playlistFacade;
 
+  @GetMapping("/random")
+  public CommonResponse<PlaylistInfo.Main> getRandomPlaylist(
+      @AuthenticationPrincipal UserPrincipal userPrincipal) {
+
+    if(userPrincipal == null) {
+      return CommonResponse.success(playlistFacade.getRandomPlaylist(null));
+    }
+
+    return CommonResponse.success(playlistFacade.getRandomPlaylist(userPrincipal.getId()));
+  }
+
   @GetMapping
   public CommonResponse<List<PlaylistInfo.Main>> getPlaylists(
       @AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -46,7 +57,7 @@ public class PlaylistController {
   public CommonResponse<PlaylistInfo.Main> createPlaylist(
       @AuthenticationPrincipal UserPrincipal userPrincipal,
       @RequestBody CreateRequest request) {
-    var command = new PlaylistCommand(userPrincipal.getId(), request.getTitle());
+    var command = new PlaylistCreateRequest(userPrincipal.getId(), request.getTitle());
     return CommonResponse.success(playlistFacade.createPlaylist(command));
   }
 

@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import ordilov.randomplay.member.domain.AuthProvider;
 import ordilov.randomplay.member.domain.Member;
 import ordilov.randomplay.member.domain.MemberStore;
+import ordilov.randomplay.playlist.domain.PlaylistInfo.PlaylistWithLike;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,9 +31,9 @@ class PlaylistReaderTest {
 
   @BeforeEach
   void setUp() {
-    Member member = memberStore.store(
-        new Member("a", "b@naver.com", "c", "d", AuthProvider.google));
-    playlistStore.store(new Playlist("start", member));
+//    Member member = memberStore.store(
+//        new Member("a", "b@naver.com", "c", "d", AuthProvider.google));
+//    playlistStore.store(new Playlist("start", member));
   }
 
   @AfterEach
@@ -52,5 +53,14 @@ class PlaylistReaderTest {
     Playlist playlist = playlistReader.getPlaylistBy(2L);
     System.out.println("playlist.getId() = " + playlist.getId());
 //    assertThat(playlist.getMember().getId()).isEqualTo(1L);
+  }
+  
+  
+  @Test
+  @DisplayName("플레이리스트 좋아요 확인")
+  void getPlaylistWithLikeByIdTest(){
+//    PlaylistWithLike playlistWithLikeBy = playlistReader.getPlaylistWithLikeBy(1L);
+
+//    System.out.println("playlistWithLikeBy.getLikedPlaylist() == null = " + playlistWithLikeBy.getLikedPlaylist() == null);;
   }
 }
