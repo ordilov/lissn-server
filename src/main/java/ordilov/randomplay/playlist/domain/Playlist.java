@@ -62,6 +62,7 @@ public class Playlist extends BaseEntity {
   }
 
   public void removeLikeCount() {
+    if(likeCount <= 0) return;
     likeCount--;
   }
 

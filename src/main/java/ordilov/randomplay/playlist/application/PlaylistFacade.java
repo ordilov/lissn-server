@@ -7,6 +7,7 @@ import ordilov.randomplay.common.interfaces.GoogleApi;
 import ordilov.randomplay.member.domain.Member;
 import ordilov.randomplay.member.domain.MemberReader;
 import ordilov.randomplay.playlist.domain.PlaylistCommand;
+import ordilov.randomplay.playlist.domain.PlaylistCommand.PlaylistCreateRequest;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.PlaylistDeleteRequest;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.PlaylistItemDeleteRequest;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.PlaylistUpdateRequest;
@@ -29,8 +30,16 @@ public class PlaylistFacade {
   private final MemberReader memberReader;
   private final PlaylistService playlistService;
 
-  public PlaylistInfo.Main createPlaylist(PlaylistCommand playlistCommand) {
+  public PlaylistInfo.Main createPlaylist(PlaylistCreateRequest playlistCommand) {
     return playlistService.createPlaylist(playlistCommand);
+  }
+
+  public PlaylistInfo.Main getRandomPlaylist(Long memberId) {
+    if(memberId == null) {
+      return playlistService.getRandomPlaylist();
+    }
+
+    return playlistService.getPlaylistWithLike(memberId);
   }
 
   public List<PlaylistInfo.Main> getMyPlaylists(Long memberId) {

@@ -12,6 +12,7 @@ import ordilov.randomplay.playlist.domain.PlaylistCommand.PlaylistUpdateRequest;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.YoutubeListRequest;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.YoutubeVideoRequest;
 import ordilov.randomplay.playlist.domain.PlaylistInfo.Main;
+import ordilov.randomplay.playlist.domain.PlaylistInfo.PlaylistWithLike;
 import ordilov.randomplay.playlist.domain.youtube.YoutubePlaylistItem;
 import ordilov.randomplay.playlist.domain.youtube.YoutubePlaylistItems;
 import ordilov.randomplay.playlist.domain.youtube.YoutubeVideo;
@@ -62,7 +63,7 @@ public class PlaylistServiceImpl implements PlaylistService {
   }
 
   @Override
-  public PlaylistInfo.Main createPlaylist(PlaylistCommand command) {
+  public PlaylistInfo.Main createPlaylist(PlaylistCommand.PlaylistCreateRequest command) {
     Member member = memberReader.getMemberBy(command.getMemberId());
     Playlist playlist = playlistStore.store(command.toEntity(member));
     member.createPlaylist(playlist);
@@ -70,8 +71,11 @@ public class PlaylistServiceImpl implements PlaylistService {
   }
 
   @Override
-  public PlaylistInfo.Main getPlaylist(Long id) {
-    return mapper.of(playlistReader.getPlaylistBy(id));
+  public PlaylistInfo.Main getPlaylistWithLike(Long memberId) {
+
+    PlaylistWithLike playlistWithLikeBy = playlistReader.getPlaylistWithLikeBy(1L, memberId);
+
+    return mapper.of(playlistWithLikeBy.getPlaylist(), playlistWithLikeBy.isLiked());
   }
 
   @Override
@@ -82,8 +86,6 @@ public class PlaylistServiceImpl implements PlaylistService {
   @Override
   public List<PlaylistInfo.Main> getMyPlaylists(Long memberId) {
     List<Playlist> playlists = playlistReader.getPlaylistByMember(memberId);
-    log.info("playlist size {}", playlists.size());
-
     return mapper.of(playlists);
   }
 
@@ -100,5 +102,11 @@ public class PlaylistServiceImpl implements PlaylistService {
   @Override
   public void deletePlaylistItem(PlaylistItemDeleteRequest command) {
     playlistStore.deleteItem(command.getPlaylistItemId());
+  }
+
+  @Override
+  public Main getRandomPlaylist() {
+    Playlist playlist = playlistReader.getPlaylistBy(1L);
+    return mapper.of(playlist);
   }
 }

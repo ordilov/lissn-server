@@ -1,5 +1,6 @@
 package ordilov.randomplay.track.infrastructure;
 
+import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ordilov.randomplay.track.domain.Track;
@@ -15,6 +16,8 @@ public class TrackReaderImpl implements TrackReader {
 
   @Override
   public Track getTrackBy(Long id) {
-    return null;
+    return trackRepository.findById(id).orElseThrow(
+        () -> new EntityNotFoundException("Track with id " + id + " not found")
+    );
   }
 }
