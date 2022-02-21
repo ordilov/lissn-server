@@ -1,36 +1,39 @@
 package ordilov.randomplay.playlist.infrastructure;
 
+import static ordilov.randomplay.like.domain.QLikedPlaylist.likedPlaylist;
+import static ordilov.randomplay.like.domain.QLikedTrack.likedTrack;
+import static ordilov.randomplay.member.domain.QMember.member;
 import static ordilov.randomplay.playlist.domain.QPlaylist.playlist;
 import static ordilov.randomplay.playlist.domain.QPlaylistItem.playlistItem;
 import static ordilov.randomplay.track.domain.QTrack.track;
 
-import com.querydsl.core.types.Projections;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Map;
 import javax.persistence.EntityManager;
-import ordilov.randomplay.like.domain.LikedPlaylist;
-import ordilov.randomplay.like.infrastructure.LikedPlaylistRepository;
 import ordilov.randomplay.playlist.domain.Playlist;
+import ordilov.randomplay.playlist.domain.PlaylistInfo.Item;
+import ordilov.randomplay.playlist.domain.PlaylistInfo.Main;
 import ordilov.randomplay.playlist.domain.PlaylistInfo.PlaylistWithLike;
-import ordilov.randomplay.playlist.domain.PlaylistItem;
+import ordilov.randomplay.playlist.domain.PlaylistMapper;
 import ordilov.randomplay.playlist.domain.PlaylistReader;
-import ordilov.randomplay.playlist.domain.dto.PlaylistTrackDto;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PlaylistReaderImpl implements PlaylistReader {
 
   private final JPAQueryFactory queryFactory;
+  private final PlaylistMapper playlistMapper;
   private final PlaylistRepository playlistRepository;
-  private final LikedPlaylistRepository likedPlaylistRepository;
 
   public PlaylistReaderImpl(EntityManager entityManager,
       PlaylistRepository playlistRepository,
-      LikedPlaylistRepository likedPlaylistRepository) {
+      PlaylistMapper playlistMapper) {
     this.playlistRepository = playlistRepository;
-    this.likedPlaylistRepository = likedPlaylistRepository;
+    this.playlistMapper = playlistMapper;
     this.queryFactory = new JPAQueryFactory(entityManager);
   }
 
@@ -41,59 +44,73 @@ public class PlaylistReaderImpl implements PlaylistReader {
 
   @Override
   public Playlist getPlaylistBy(Long id) {
-    return queryFactory
-        .select(playlist)
+    List<Tuple> results = queryFactory
+        .select(playlist, playlistItem, track)
         .from(playlist)
         .leftJoin(playlist.playlistItems, playlistItem)
         .leftJoin(playlistItem.track, track)
         .where(playlist.id.eq(id))
-        .fetchOne();
+        .fetch();
+
+    return results.get(0).get(playlist);
   }
 
   @Override
   public PlaylistWithLike getPlaylistWithLikeBy(Long id, Long memberId) {
-
-    Playlist p = queryFactory
-        .select(playlist)
+    List<Tuple> results = queryFactory
+        .select(playlist, playlistItem, track, likedTrack, likedPlaylist)
         .from(playlist)
+        .join(playlist.member, member)
+        .leftJoin(playlist.likedPlaylists, likedPlaylist)
         .leftJoin(playlist.playlistItems, playlistItem)
         .leftJoin(playlistItem.track, track)
+        .leftJoin(track.likedTracks, likedTrack)
         .where(playlist.id.eq(id))
-        .fetchOne();
+        .fetch();
 
-    Optional<LikedPlaylist> likedPlaylist =
-        likedPlaylistRepository.findByMemberIdAndPlaylistId(memberId, id);
+    if (results.isEmpty()) {
+      return null;
+    }
 
-    return new PlaylistWithLike(p, likedPlaylist.isPresent());
+    PlaylistWithLike playlistWithLike = new PlaylistWithLike(results.get(0).get(playlist),
+        results.get(0).get(likedPlaylist) != null);
+
+    results.forEach(result -> {
+      playlistWithLike.getItems()
+          .add(new Item(result.get(playlistItem), result.get(likedTrack) != null));
+    });
+
+    return playlistWithLike;
   }
 
   @Override
-  public List<Playlist> getPlaylistByMember(Long memberId) {
-    List<PlaylistTrackDto> playlistTracks = queryFactory
-        .select(Projections.fields(PlaylistTrackDto.class,
-            playlist,
-            track
-        ))
+  public List<Main> getPlaylistByMember(Long memberId) {
+    List<Tuple> results = queryFactory
+        .select(playlist, playlistItem, track, likedTrack, likedPlaylist)
         .from(playlist)
+        .join(playlist.member, member)
+        .leftJoin(playlist.likedPlaylists, likedPlaylist)
         .leftJoin(playlist.playlistItems, playlistItem)
         .leftJoin(playlistItem.track, track)
-        .where(playlist.member.id.eq(memberId))
+        .leftJoin(track.likedTracks, likedTrack)
         .fetch();
 
-    return playlistTracks.stream().map(PlaylistTrackDto::getPlaylist).distinct()
-        .collect(Collectors.toList());
-  }
+    Map<PlaylistWithLike, List<Item>> playlistWithLikes = new HashMap<>();
 
-  public List<Playlist> getPlaylistByMembers(Long memberId) {
-    return queryFactory
-        .select(playlist)
-        .from(playlist)
-        .where(playlist.member.id.eq(memberId))
-        .fetch();
-  }
+    results.forEach(tuple -> {
+      PlaylistWithLike playlistWithLike = new PlaylistWithLike(tuple.get(playlist),
+          tuple.get(likedPlaylist) != null);
+      playlistWithLikes.computeIfAbsent(playlistWithLike,
+          k -> playlistWithLike.getItems());
 
-  @Override
-  public List<PlaylistItem> getPlaylistItemsByMembers(Long memberId) {
-    return null;
+      if (tuple.get(playlistItem) == null) {
+        return;
+      }
+
+      playlistWithLikes.get(playlistWithLike)
+          .add(new Item(tuple.get(playlistItem), tuple.get(likedTrack) != null));
+    });
+
+    return playlistMapper.of(new ArrayList<>(playlistWithLikes.keySet()));
   }
 }

@@ -18,6 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ordilov.randomplay.common.domain.BaseEntity;
+import ordilov.randomplay.like.domain.LikedPlaylist;
 import ordilov.randomplay.member.domain.Member;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -28,8 +29,13 @@ public class Playlist extends BaseEntity {
 
   @OneToMany(mappedBy = "playlist", fetch = LAZY, cascade = CascadeType.ALL)
   private final List<PlaylistItem> playlistItems = new ArrayList<>();
+
+  @OneToMany(mappedBy = "playlist", fetch = LAZY)
+  private final List<LikedPlaylist> likedPlaylists = new ArrayList<>();
+
   @Id
   @GeneratedValue(strategy = IDENTITY)
+  @Column(name = "playlist_id")
   private Long id;
   private String title;
   @ManyToOne
@@ -62,7 +68,9 @@ public class Playlist extends BaseEntity {
   }
 
   public void removeLikeCount() {
-    if(likeCount <= 0) return;
+    if (likeCount <= 0) {
+      return;
+    }
     likeCount--;
   }
 

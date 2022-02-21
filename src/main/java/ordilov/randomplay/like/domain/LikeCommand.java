@@ -11,7 +11,6 @@ public class LikeCommand {
     private Long memberId;
     private Long playlistId;
 
-
   }
 
   @Getter

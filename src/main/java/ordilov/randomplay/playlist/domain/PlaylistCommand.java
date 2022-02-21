@@ -22,9 +22,6 @@ public class PlaylistCommand {
     }
   }
 
-
-
-
   @Getter
   public static class YoutubeListRequest {
 

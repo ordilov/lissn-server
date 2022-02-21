@@ -21,8 +21,6 @@ public interface PlaylistService {
 
   Main getPlaylistWithLike(Long id);
 
-  List<Main> getPlaylists();
-
   List<Main> getMyPlaylists(Long memberId);
 
   void updatePlaylistTitle(PlaylistUpdateRequest command);

@@ -1,16 +1,22 @@
 package ordilov.randomplay.track.domain;
 
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ordilov.randomplay.common.domain.BaseEntity;
+import ordilov.randomplay.like.domain.LikedTrack;
 import org.hibernate.annotations.ColumnDefault;
 
 
@@ -30,6 +36,9 @@ public class Track extends BaseEntity {
 
   @ColumnDefault("0")
   private int likeCount = 0;
+
+  @OneToMany(mappedBy = "track", fetch = LAZY)
+  private final List<LikedTrack> likedTracks = new ArrayList<>();
 
   @Builder
   public Track(String title, String resourceId) {

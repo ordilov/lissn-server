@@ -1,10 +1,11 @@
 package ordilov.randomplay.like.domain;
 
-import ordilov.randomplay.playlist.domain.Playlist;
+import ordilov.randomplay.like.domain.LikeInfo.LikedPlaylistInfo;
+import ordilov.randomplay.like.domain.LikeInfo.LikedTrackInfo;
 
 public interface LikeService {
-    void like(LikeCommand.LikePlaylistRequest request);
-    void like(LikeCommand.LikeTrackRequest request);
-    void unlike(Long memberId, Long playlistId);
-    boolean isLiked(Long memberId, Long playlistId);
+
+  LikedTrackInfo like(LikeCommand.LikeTrackRequest request);
+
+  LikedPlaylistInfo like(LikeCommand.LikePlaylistRequest request);
 }

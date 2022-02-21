@@ -39,11 +39,9 @@ public class PlaylistController {
   @GetMapping("/random")
   public CommonResponse<PlaylistInfo.Main> getRandomPlaylist(
       @AuthenticationPrincipal UserPrincipal userPrincipal) {
-
     if(userPrincipal == null) {
       return CommonResponse.success(playlistFacade.getRandomPlaylist(null));
     }
-
     return CommonResponse.success(playlistFacade.getRandomPlaylist(userPrincipal.getId()));
   }
 

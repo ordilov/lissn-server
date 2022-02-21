@@ -72,21 +72,13 @@ public class PlaylistServiceImpl implements PlaylistService {
 
   @Override
   public PlaylistInfo.Main getPlaylistWithLike(Long memberId) {
-
     PlaylistWithLike playlistWithLikeBy = playlistReader.getPlaylistWithLikeBy(1L, memberId);
-
-    return mapper.of(playlistWithLikeBy.getPlaylist(), playlistWithLikeBy.isLiked());
-  }
-
-  @Override
-  public List<PlaylistInfo.Main> getPlaylists() {
-    return mapper.of(playlistReader.getPlaylists());
+    return mapper.of(playlistWithLikeBy);
   }
 
   @Override
   public List<PlaylistInfo.Main> getMyPlaylists(Long memberId) {
-    List<Playlist> playlists = playlistReader.getPlaylistByMember(memberId);
-    return mapper.of(playlists);
+    return playlistReader.getPlaylistByMember(memberId);
   }
 
   @Override

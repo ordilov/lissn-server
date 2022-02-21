@@ -11,9 +11,6 @@ public interface PlaylistReader {
 
   PlaylistWithLike getPlaylistWithLikeBy(Long Id, Long memberId);
 
-  List<Playlist> getPlaylistByMember(Long memberId);
+  List<PlaylistInfo.Main> getPlaylistByMember(Long memberId);
 
-  List<Playlist> getPlaylistByMembers(Long memberId);
-
-  List<PlaylistItem> getPlaylistItemsByMembers(Long memberId);
 }
