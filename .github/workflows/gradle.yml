@@ -7,6 +7,17 @@
 
 name: Java CI with Gradle
 
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  DATABASE_USER: ${{ secrets.DATABASE_USER }}
+  DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+  OAUTH2_CLIENT_ID: ${{ secrets.OAUTH2_CLIENT_ID }}
+  OAUTH2_CLIENT_SECRET: ${{ secrets.OAUTH2_CLIENT_SECRET }}
+  OAUTH2_REDIRECT_URI: ${{ secrets.OAUTH2_REDIRECT_URI }}
+  AUTHORIZED_REDIRECT_URL: ${{ secrets.AUTHORIZED_REDIRECT_URL }}
+  TOKEN_SECRET: ${{ secrets.TOKEN_SECRET }}
+  TOKEN_EXPIRATION: ${{ secrets.TOKEN_EXPIRATION }}
+
 on:
   push:
     branches: [ master ]
@@ -26,18 +37,26 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
     - name: Grant execute permssion for gradlew 
-      run: chmod +x gradlew
+      run: chmod +x ./gradlew
+      shell: bash
+
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
-      env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        DATABASE_USER: ${{ secrets.DATABASE_USER }}
-        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-        OAUTH2_CLIENT_ID: ${{ secrets.OAUTH2_CLIENT_ID }}
-        OAUTH2_CLIENT_SECRET: ${{ secrets.OAUTH2_CLIENT_SECERT }}
-        OAUTH2_REDIRECT_URI: ${{ secrets.OAUTH2_REDIRECT_URI }}
-        AUTHORIZED_REDIRECT_URL: ${{ secret.AUTHORIZED_REDIRECT_URL }}
-        TOKEN_SECERT: ${{ secrets.TOKEN_SECERT }}
-        TOKEN_EXPIRATION: ${{ secrets.TOKEN_EXPIRATION }}
+      run: ./gradlew clean build
+      shell: bash
+
+    - name: Make zip file
+      run: zip -r ./$GITHUB_SHA.zip .
+      shell: bash
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
       with:
-        arguments: build
+        aws-access-key-id: ${{ secrets.AWS_S3_UPLOAD }}
+        aws-secret-access-key: ${{ secrets.AWS_S3_UPLOAD_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Upload to S3
+      run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://lissn-s3/lissn/$GITHUB_SHA.zip
+
+    - name: Code Deploy
+      run: aws deploy create-deployment --application-name lissn-deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name lissn-deploy-group --s3-location bucket=lissn-s3,bundleType=zip,key=lissn/$GITHUB_SHA.zip
