@@ -38,6 +38,7 @@ public class Playlist extends BaseEntity {
   @Column(name = "playlist_id")
   private Long id;
   private String title;
+
   @ManyToOne
   @JoinColumn(name = "member_id")
   private Member member;

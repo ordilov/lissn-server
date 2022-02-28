@@ -30,7 +30,7 @@ public class Track extends BaseEntity {
   @Column(name = "track_id", nullable = false)
   private Long id;
 
-  @Column(unique = true)
+  @Column(unique = true, length = 200)
   private String resourceId;
   private String title;
 

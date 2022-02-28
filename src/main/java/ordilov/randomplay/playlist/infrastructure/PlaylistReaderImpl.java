@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.persistence.EntityManager;
 import ordilov.randomplay.playlist.domain.Playlist;
 import ordilov.randomplay.playlist.domain.PlaylistInfo.Item;
@@ -20,9 +21,9 @@ import ordilov.randomplay.playlist.domain.PlaylistInfo.Main;
 import ordilov.randomplay.playlist.domain.PlaylistInfo.PlaylistWithLike;
 import ordilov.randomplay.playlist.domain.PlaylistMapper;
 import ordilov.randomplay.playlist.domain.PlaylistReader;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 public class PlaylistReaderImpl implements PlaylistReader {
 
   private final JPAQueryFactory queryFactory;
@@ -56,7 +57,7 @@ public class PlaylistReaderImpl implements PlaylistReader {
   }
 
   @Override
-  public PlaylistWithLike getPlaylistWithLikeBy(Long id, Long memberId) {
+  public PlaylistWithLike getPlaylistWithLikeBy(Long playlistId, Long memberId) {
     List<Tuple> results = queryFactory
         .select(playlist, playlistItem, track, likedTrack, likedPlaylist)
         .from(playlist)
@@ -65,20 +66,20 @@ public class PlaylistReaderImpl implements PlaylistReader {
         .leftJoin(playlist.playlistItems, playlistItem)
         .leftJoin(playlistItem.track, track)
         .leftJoin(track.likedTracks, likedTrack)
-        .where(playlist.id.eq(id))
+        .where(playlist.id.eq(playlistId))
         .fetch();
 
     if (results.isEmpty()) {
       return null;
     }
 
-    PlaylistWithLike playlistWithLike = new PlaylistWithLike(results.get(0).get(playlist),
+    PlaylistWithLike playlistWithLike = new PlaylistWithLike(
+        Objects.requireNonNull(results.get(0).get(playlist)),
         results.get(0).get(likedPlaylist) != null);
 
-    results.forEach(result -> {
-      playlistWithLike.getItems()
-          .add(new Item(result.get(playlistItem), result.get(likedTrack) != null));
-    });
+    results.forEach(result -> playlistWithLike.getItems()
+        .add(new Item(Objects.requireNonNull(result.get(playlistItem)),
+            result.get(likedTrack) != null)));
 
     return playlistWithLike;
   }
@@ -98,7 +99,8 @@ public class PlaylistReaderImpl implements PlaylistReader {
     Map<PlaylistWithLike, List<Item>> playlistWithLikes = new HashMap<>();
 
     results.forEach(tuple -> {
-      PlaylistWithLike playlistWithLike = new PlaylistWithLike(tuple.get(playlist),
+      PlaylistWithLike playlistWithLike = new PlaylistWithLike(
+          Objects.requireNonNull(tuple.get(playlist)),
           tuple.get(likedPlaylist) != null);
       playlistWithLikes.computeIfAbsent(playlistWithLike,
           k -> playlistWithLike.getItems());
@@ -108,7 +110,7 @@ public class PlaylistReaderImpl implements PlaylistReader {
       }
 
       playlistWithLikes.get(playlistWithLike)
-          .add(new Item(tuple.get(playlistItem), tuple.get(likedTrack) != null));
+          .add(new Item(Objects.requireNonNull(tuple.get(playlistItem)), tuple.get(likedTrack) != null));
     });
 
     return playlistMapper.of(new ArrayList<>(playlistWithLikes.keySet()));

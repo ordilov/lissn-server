@@ -72,7 +72,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
   @Override
   public PlaylistInfo.Main getPlaylistWithLike(Long memberId) {
-    PlaylistWithLike playlistWithLikeBy = playlistReader.getPlaylistWithLikeBy(1L, memberId);
+    PlaylistWithLike playlistWithLikeBy = playlistReader.getPlaylistWithLikeBy(2L, memberId);
     return mapper.of(playlistWithLikeBy);
   }
 

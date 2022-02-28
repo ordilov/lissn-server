@@ -52,7 +52,7 @@ public class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRe
     Map<String, Object> additionalParameters =
         new LinkedHashMap<>(authorizationRequest.getAdditionalParameters());
     additionalParameters.put("access_type", "offline");
-//    additionalParameters.put("prompt", "consent");
+    additionalParameters.put("prompt", "consent");
 
     return OAuth2AuthorizationRequest.from(authorizationRequest)
         .additionalParameters(additionalParameters)

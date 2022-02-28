@@ -18,6 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ordilov.randomplay.common.domain.BaseEntity;
+import ordilov.randomplay.member.domain.playing.Playing;
 import ordilov.randomplay.playlist.domain.Playlist;
 
 @Getter
@@ -27,20 +28,35 @@ public class Member extends BaseEntity {
 
   @OneToMany(mappedBy = "member", fetch = LAZY)
   private final List<Playlist> playlists = new ArrayList<>();
+
   @Id
   @Column(name = "member_id")
   @GeneratedValue(strategy = IDENTITY)
   private Long id;
+
   @Column(length = 60, nullable = false)
   private String name;
+
   @Email
   @Column(nullable = false, unique = true, length = 250)
   private String email;
+
+  @Column(nullable = false, unique = true, length = 250)
   private String refreshToken;
+
+  @Column(length = 250)
   private String profileImageUrl;
+
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private AuthProvider provider;
+
   private Boolean isDeleted = false;
+
+  private Long nowPlaying;
+
+  @OneToMany(mappedBy = "member", fetch = LAZY)
+  private final List<Playing> playings = new ArrayList<>();
 
   @Builder
   public Member(String name, String email, String refreshToken, String profileImageUrl,
@@ -55,6 +71,10 @@ public class Member extends BaseEntity {
   public void updateProfile(MemberCommand command) {
     this.name = command.getName();
     this.profileImageUrl = command.getProfileImageUrl();
+  }
+
+  public void playTrack(Long playOrder) {
+    nowPlaying = playOrder;
   }
 
   public void setRefreshToken(String refreshToken) {

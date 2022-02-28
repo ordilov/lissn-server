@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import ordilov.randomplay.member.domain.MemberCommand;
 import ordilov.randomplay.member.domain.MemberInfo;
 import ordilov.randomplay.member.domain.MemberService;
+import ordilov.randomplay.member.domain.playing.PlayingCommand;
+import ordilov.randomplay.member.domain.playing.PlayingInfo;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,5 +24,17 @@ public class MemberFacade {
 
   public void updateRefreshToken(Long memberId, String refreshToken) {
     memberService.updateRefreshToken(memberId, refreshToken);
+  }
+
+  public PlayingInfo getPlayingInfo(Long memberId) {
+    return memberService.getPlayingInfo(memberId);
+  }
+
+  public PlayingInfo changePlaying(PlayingCommand.PlayingPlaylist command) {
+    return memberService.changePlaying(command);
+  }
+
+  public void deletePlaying(Long memberId, Long playingId) {
+    memberService.deletePlaying(memberId, playingId);
   }
 }

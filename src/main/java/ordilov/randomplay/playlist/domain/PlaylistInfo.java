@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ordilov.randomplay.member.domain.playing.Playing;
 import ordilov.randomplay.track.domain.Track;
 
 @Getter
@@ -37,6 +38,14 @@ public class PlaylistInfo {
       this.title = item.getTrack().getTitle();
       this.trackId = item.getTrack().getId();
       this.resourceId = item.getTrack().getResourceId();
+      this.isLiked = isLiked;
+    }
+
+    public Item(Playing playing, Boolean isLiked) {
+      this.id = playing.getId();
+      this.title = playing.getTrack().getTitle();
+      this.trackId = playing.getTrack().getId();
+      this.resourceId = playing.getTrack().getResourceId();
       this.isLiked = isLiked;
     }
   }
