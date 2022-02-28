@@ -3,6 +3,7 @@ package ordilov.randomplay.member.domain;
 
 import ordilov.randomplay.member.domain.playing.PlayingCommand;
 import ordilov.randomplay.member.domain.playing.PlayingInfo;
+import ordilov.randomplay.member.interfaces.MemberDto.SavePlayingRequest;
 
 public interface MemberService {
 
@@ -14,7 +15,9 @@ public interface MemberService {
 
   PlayingInfo getPlayingInfo(Long memberId);
 
-  PlayingInfo changePlaying(PlayingCommand.PlayingPlaylist command);
+  void changePlaying(PlayingCommand.PlayingPlaylist command);
 
   void deletePlaying(Long memberId, Long playingId);
+
+  void savePlaying(Long memberId, Long playingId);
 }

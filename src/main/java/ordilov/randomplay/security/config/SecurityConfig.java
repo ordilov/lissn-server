@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
@@ -22,7 +21,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private final CustomOAuth2UserService customOAuth2UserService;
   private final TokenAuthenticationFilter tokenAuthenticationFilter;
   private final AuthenticationEntryPoint restAuthenticationEntryPoint;
-  private final ClientRegistrationRepository clientRegistrationRepository;
   private final CustomAuthorizationRequestResolver customAuthorizationRequestResolver;
   private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
   private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
@@ -58,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/**/*.js")
         .permitAll()
         .antMatchers("/auth/**",
-            "/oauth2/**", "/playlists/random")
+            "/oauth2/**", "/playlists/random", "/health")
         .permitAll()
         .anyRequest()
         .authenticated()

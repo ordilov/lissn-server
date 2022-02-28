@@ -1,13 +1,13 @@
 package ordilov.randomplay.member.interfaces;
 
 import lombok.Builder;
+import lombok.Getter;
 import ordilov.randomplay.member.domain.playing.PlayingCommand;
 
 public class MemberDto {
 
   @Builder
   public static class ChangePlayingRequest {
-
     private Long trackId;
     private Long playlistId;
     private Long playlistItemId;
@@ -19,6 +19,13 @@ public class MemberDto {
           .playlistItemId(playlistItemId)
           .build();
     }
+  }
+
+  @Getter
+  @Builder
+  public static class SavePlayingRequest {
+    private Long playingId;
+
   }
 
 }

@@ -11,6 +11,7 @@ import ordilov.randomplay.member.domain.playing.PlayingCommand.PlayingPlaylist;
 import ordilov.randomplay.member.domain.playing.PlayingInfo;
 import ordilov.randomplay.member.domain.playing.PlayingReader;
 import ordilov.randomplay.member.domain.playing.PlayingStore;
+import ordilov.randomplay.member.interfaces.MemberDto.SavePlayingRequest;
 import ordilov.randomplay.playlist.domain.Playlist;
 import ordilov.randomplay.playlist.domain.PlaylistItem;
 import ordilov.randomplay.playlist.domain.PlaylistReader;
@@ -48,28 +49,29 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
-  public PlayingInfo changePlaying(PlayingPlaylist command) {
+  public void changePlaying(PlayingPlaylist command) {
     playingStore.clear(command.getMemberId());
 
     Member member = memberReader.getMemberBy(command.getMemberId());
     Playlist playlist = playlistReader.getPlaylistBy(command.getPlaylistId());
+
     List<Track> tracks = playlist.getPlaylistItems().stream()
         .map(PlaylistItem::getTrack)
         .collect(Collectors.toList());
 
-    playingStore.store(LongStream.range(0, tracks.size())
+    List<Playing> playings = playingStore.store(LongStream.range(0, tracks.size())
         .mapToObj(i -> new Playing(member, tracks.get((int) i), i))
         .collect(Collectors.toList()));
 
-    long selected = IntStream.range(0, playlist.getPlaylistItems().size())
-        .filter(i -> Objects.equals(playlist.getPlaylistItems().get(i).getId(),
-            command.getPlaylistId()))
-        .findFirst().orElse(-1);
-    member.playTrack(selected);
-
-    member.playTrack(command.getPlaylistItemId());
-
-    return null;
+    if (command.getPlaylistItemId() == null) {
+      member.playTrack(playings.get(0).getId());
+    } else {
+      long selected = IntStream.range(0, playlist.getPlaylistItems().size())
+          .filter(i -> Objects.equals(playlist.getPlaylistItems().get(i).getId(),
+              command.getPlaylistId()))
+          .findFirst().orElse(-1);
+      member.playTrack(selected);
+    }
   }
 
   @Override
@@ -80,6 +82,12 @@ public class MemberServiceImpl implements MemberService {
       member.playTrack(--nowPlaying);
     }
     playingStore.delete(playingId);
+  }
+
+  @Override
+  public void savePlaying(Long memberId, Long playingId) {
+    Member member = memberReader.getMemberBy(memberId);
+    member.playTrack(playingId);
   }
 
   @Override

@@ -7,11 +7,13 @@ import ordilov.randomplay.member.application.MemberFacade;
 import ordilov.randomplay.member.domain.MemberInfo;
 import ordilov.randomplay.member.domain.playing.PlayingInfo;
 import ordilov.randomplay.member.interfaces.MemberDto.ChangePlayingRequest;
+import ordilov.randomplay.member.interfaces.MemberDto.SavePlayingRequest;
 import ordilov.randomplay.security.userinfo.UserPrincipal;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,15 +48,20 @@ public class MemberController {
   }
 
   @PostMapping(value = "/playing")
-  public CommonResponse<PlayingInfo> changePlaying(
+  public CommonResponse<String> changePlaying(
       @AuthenticationPrincipal UserPrincipal userPrincipal,
       @RequestBody ChangePlayingRequest request) {
     var playingCommand = request.toCommand(userPrincipal.getId());
-    var playingInfo = memberFacade.changePlaying(playingCommand);
-    return CommonResponse.success(playingInfo);
+    memberFacade.changePlaying(playingCommand);
+    return CommonResponse.success("playing changed");
   }
 
-
+  @PostMapping(value = "/playing/{playingId}")
+  public CommonResponse<String> savePlaying(
+      @AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable Long playingId) {
+    memberFacade.savePlaying(userPrincipal.getId(), playingId);
+    return CommonResponse.success("playing saved");
+  }
 
   @DeleteMapping(value = "/playing/{playingId}")
   public CommonResponse<String> cancelPlaying(

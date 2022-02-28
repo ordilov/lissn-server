@@ -61,7 +61,6 @@ public class PlaylistReaderImpl implements PlaylistReader {
     List<Tuple> results = queryFactory
         .select(playlist, playlistItem, track, likedTrack, likedPlaylist)
         .from(playlist)
-        .join(playlist.member, member)
         .leftJoin(playlist.likedPlaylists, likedPlaylist)
         .leftJoin(playlist.playlistItems, playlistItem)
         .leftJoin(playlistItem.track, track)

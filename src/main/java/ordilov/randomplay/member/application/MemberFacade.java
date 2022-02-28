@@ -6,6 +6,7 @@ import ordilov.randomplay.member.domain.MemberInfo;
 import ordilov.randomplay.member.domain.MemberService;
 import ordilov.randomplay.member.domain.playing.PlayingCommand;
 import ordilov.randomplay.member.domain.playing.PlayingInfo;
+import ordilov.randomplay.member.interfaces.MemberDto.SavePlayingRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,11 +31,15 @@ public class MemberFacade {
     return memberService.getPlayingInfo(memberId);
   }
 
-  public PlayingInfo changePlaying(PlayingCommand.PlayingPlaylist command) {
-    return memberService.changePlaying(command);
+  public void changePlaying(PlayingCommand.PlayingPlaylist command) {
+    memberService.changePlaying(command);
   }
 
   public void deletePlaying(Long memberId, Long playingId) {
     memberService.deletePlaying(memberId, playingId);
+  }
+
+  public void savePlaying(Long memberId, Long playingId) {
+    memberService.savePlaying(memberId, playingId);
   }
 }
