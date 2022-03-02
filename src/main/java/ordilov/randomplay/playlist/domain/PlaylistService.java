@@ -19,7 +19,7 @@ public interface PlaylistService {
 
   Main createPlaylist(PlaylistCommand.PlaylistCreateRequest command);
 
-  Main getPlaylistWithLike(Long id);
+  Main getRandomPlaylist(Long id);
 
   List<Main> getMyPlaylists(Long memberId);
 
@@ -29,5 +29,4 @@ public interface PlaylistService {
 
   void deletePlaylistItem(PlaylistItemDeleteRequest command);
 
-  Main getRandomPlaylist();
 }
