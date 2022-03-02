@@ -9,6 +9,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -45,6 +47,9 @@ public class Playlist extends BaseEntity {
 
   @ColumnDefault("0")
   private int likeCount = 0;
+
+  @Enumerated(EnumType.STRING)
+  private final PlaylistType type = PlaylistType.CUSTOM;
 
   @Builder
   public Playlist(String title, Member member) {

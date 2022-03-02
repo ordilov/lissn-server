@@ -41,7 +41,7 @@ public class Member extends BaseEntity {
   @Column(nullable = false, unique = true, length = 250)
   private String email;
 
-  @Column(nullable = false, unique = true, length = 250)
+  @Column(length = 250)
   private String refreshToken;
 
   @Column(length = 250)

@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import ordilov.randomplay.common.interfaces.GoogleApi;
 import ordilov.randomplay.member.domain.Member;
 import ordilov.randomplay.member.domain.MemberReader;
-import ordilov.randomplay.playlist.domain.PlaylistCommand;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.PlaylistCreateRequest;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.PlaylistDeleteRequest;
 import ordilov.randomplay.playlist.domain.PlaylistCommand.PlaylistItemDeleteRequest;
@@ -35,11 +34,7 @@ public class PlaylistFacade {
   }
 
   public PlaylistInfo.Main getRandomPlaylist(Long memberId) {
-    if(memberId == null) {
-      return playlistService.getRandomPlaylist();
-    }
-
-    return playlistService.getPlaylistWithLike(memberId);
+    return playlistService.getRandomPlaylist(memberId);
   }
 
   public List<PlaylistInfo.Main> getMyPlaylists(Long memberId) {

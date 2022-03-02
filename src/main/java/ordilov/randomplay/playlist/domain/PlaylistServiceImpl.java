@@ -71,8 +71,8 @@ public class PlaylistServiceImpl implements PlaylistService {
   }
 
   @Override
-  public PlaylistInfo.Main getPlaylistWithLike(Long memberId) {
-    PlaylistWithLike playlistWithLikeBy = playlistReader.getPlaylistWithLikeBy(2L, memberId);
+  public PlaylistInfo.Main getRandomPlaylist(Long memberId) {
+    PlaylistWithLike playlistWithLikeBy = playlistReader.getRandomPlaylist(memberId);
     return mapper.of(playlistWithLikeBy);
   }
 
@@ -96,9 +96,4 @@ public class PlaylistServiceImpl implements PlaylistService {
     playlistStore.deleteItem(command.getPlaylistItemId());
   }
 
-  @Override
-  public Main getRandomPlaylist() {
-    Playlist playlist = playlistReader.getPlaylistBy(1L);
-    return mapper.of(playlist);
-  }
 }

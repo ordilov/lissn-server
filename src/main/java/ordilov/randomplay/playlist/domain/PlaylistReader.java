@@ -9,7 +9,7 @@ public interface PlaylistReader {
 
   Playlist getPlaylistBy(Long id);
 
-  PlaylistWithLike getPlaylistWithLikeBy(Long Id, Long memberId);
+  PlaylistWithLike getRandomPlaylist(Long memberId);
 
   List<PlaylistInfo.Main> getPlaylistByMember(Long memberId);
 
