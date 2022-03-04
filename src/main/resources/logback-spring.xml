@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+  <conversionRule conversionWord="clr"
+    converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+  <conversionRule conversionWord="wex"
+    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+  <conversionRule conversionWord="wEx"
+    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+
+  <springProfile name="local">
+    <property name="LOG_PATH" value="log"/>
+    <property name="LOG_FILE_NAME" value="local_log"/>
+  </springProfile>
+
+  <springProfile name="dev">
+    <property name="LOG_PATH" value="log"/>
+    <property name="LOG_LEVEL" value="info"/>
+    <property name="LOG_FILE_NAME" value="dev_log"/>
+  </springProfile>
+
+  <springProfile name="prod">
+    <property name="LOG_PATH" value="/home/ec2-user/log"/>
+    <property name="LOG_LEVEL" value="info"/>
+    <property name="LOG_FILE_NAME" value="prod_log"/>
+  </springProfile>
+
+  <!--Environment 내의 프로퍼티들을 개별적으로 설정할 수도 있다.-->
+  <springProperty scope="context" name="LOG_LEVEL" source="logging.level.root"/>
+
+  <!-- err log file name -->
+  <property name="ERR_LOG_FILE_NAME" value="err_log"/>
+  <!-- pattern -->
+  <property name="CONSOLE_LOG_PATTERN"
+    value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+  <property name="LOG_PATTERN"
+    value="%-5level %d{yy-MM-dd HH:mm:ss}[%thread] [%logger{0}:%line] - %msg%n"/>
+
+  <!-- Console Appender -->
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>info</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+      </encoder>
+  </appender>
+
+  <!-- File Appender -->
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- 파일경로 설정 -->
+    <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>${LOG_LEVEL}</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+
+    <!-- 출력패턴 설정-->
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${LOG_PATTERN}</pattern>
+    </encoder>
+
+    <!-- Rolling 정책 -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- .gz,.zip 등을 넣으면 자동 일자별 로그파일 압축 -->
+      <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <!-- 파일당 최고 용량 kb, mb, gb -->
+        <maxFileSize>10MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+      <!-- 일자별 로그파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거-->
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+  </appender>
+
+  <appender name="SLACK" class="com.github.maricn.logback.SlackAppender">
+    <!-- Slack API token -->
+<!--    <token>1111111111-1111111-11111111-111111111</token>-->
+    <!-- Slack incoming webhook uri. Uncomment the lines below to use incoming webhook uri instead of API token. -->
+    <webhookUri>${SLACK_WEBHOOK_URI}</webhookUri>
+    <!-- Channel that you want to post - default is #general -->
+    <channel>#noti</channel>
+    <!-- Formatting (you can use Slack formatting - URL links, code formatting, etc.) -->
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <pattern>%-4relative [%thread] %-5level %class - %msg%n</pattern>
+    </layout>
+    <!-- Username of the messages sender -->
+    <username>${HOSTNAME}</username>
+    <!-- Emoji to be used for messages -->
+    <iconEmoji>:stuck_out_tongue_winking_eye:</iconEmoji>
+    <!-- If color coding of log levels should be used -->
+    <colorCoding>true</colorCoding>
+  </appender>
+  <!-- Currently recommended way of using Slack appender -->
+  <appender name="ASYNC_SLACK" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="SLACK" />
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>WARN</level>
+    </filter>
+  </appender>
+
+
+
+  <!-- 에러의 경우 파일에 로그 처리 -->
+  <appender name="Error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>ERROR</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+
+    <file>${LOG_PATH}/${ERR_LOG_FILE_NAME}.log</file>
+
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${LOG_PATTERN}</pattern>
+    </encoder>
+
+    <!-- Rolling 정책 -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- .gz,.zip 등을 넣으면 자동 일자별 로그파일 압축 -->
+      <fileNamePattern>${LOG_PATH}/${ERR_LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <!-- 파일당 최고 용량 kb, mb, gb -->
+        <maxFileSize>10MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+      <!-- 일자별 로그파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거-->
+      <maxHistory>60</maxHistory>
+    </rollingPolicy>
+  </appender>
+
+  <!-- root레벨 설정 -->
+  <root>
+    <level value="ALL" />
+    <appender-ref ref="ASYNC_SLACK" />
+  </root>
+
+  <root level="${LOG_LEVEL}">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="FILE"/>
+    <appender-ref ref="Error"/>
+    <level value="ALL"/>
+  </root>
+
+</configuration>

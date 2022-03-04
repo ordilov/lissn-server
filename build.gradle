@@ -51,6 +51,8 @@ dependencies {
 
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
 
+    implementation "com.github.maricn:logback-slack-appender:1.4.0"
+
     implementation 'com.h2database:h2'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'
