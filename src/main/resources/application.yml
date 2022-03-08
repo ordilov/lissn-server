@@ -42,6 +42,7 @@ server:
 auth:
   token-secret: ${TOKEN_SECRET}
   token-expiration: ${TOKEN_EXPIRATION}
+  token-refresh-expiration: ${TOKEN_REFRESH_EXPIRATION}
   authorized-redirect-urls:
     - ${AUTHORIZED_REDIRECT_URL}
 
@@ -88,6 +89,7 @@ logging:
 auth:
   token-secret: ${TOKEN_SECRET}
   token-expiration: ${TOKEN_EXPIRATION}
+  token-refresh-expiration: ${TOKEN_REFRESH_EXPIRATION}
   authorized-redirect-urls:
     - ${AUTHORIZED_REDIRECT_URL}
 
