@@ -1,4 +1,5 @@
 spring:
+
   datasource:
     url: ${DATABASE_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -8,9 +9,10 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5Dialect
     properties:
       hibernate:
-        hbm2ddl.auto: update
+        hbm2ddl.auto: create
         format_sql: true
-        show_sql: false
+        show_sql: true
+    defer-datasource-initialization: true
   security:
     oauth2:
       client:
@@ -24,13 +26,11 @@ spring:
               - profile
               - https://www.googleapis.com/auth/youtube
               - https://www.googleapis.com/auth/youtube.readonly
+  sql:
+    init:
+      mode: always
 server:
   port: 8080
-
-logging:
-  slack:
-    webhook-uri: ${SLACK_WEBHOOK_URI}
-  config: classpath:logback-spring.xml
 
 auth:
   token-secret: ${TOKEN_SECRET}
@@ -38,4 +38,3 @@ auth:
   token-refresh-expiration: ${TOKEN_REFRESH_EXPIRATION}
   authorized-redirect-urls:
     - ${AUTHORIZED_REDIRECT_URL}
-
