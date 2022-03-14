@@ -70,8 +70,11 @@ public class Member extends BaseEntity {
     this.provider = provider;
   }
 
-  public void updateProfile(String name, String picture) {
+  public void updateName(String name) {
     this.name = name;
+  }
+
+  public void updatePicture(String picture) {
     this.picture = picture;
   }
 

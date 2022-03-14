@@ -3,7 +3,7 @@ package ordilov.lissn.playlist.application;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ordilov.lissn.common.interfaces.GoogleApi;
+import ordilov.lissn.common.adapter.GoogleApi;
 import ordilov.lissn.member.domain.Member;
 import ordilov.lissn.member.application.port.out.MemberReader;
 import ordilov.lissn.playlist.domain.PlaylistCommand.PlaylistCreateRequest;

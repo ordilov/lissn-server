@@ -1,4 +1,4 @@
-package ordilov.lissn.common.interfaces;
+package ordilov.lissn.common.adapter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;

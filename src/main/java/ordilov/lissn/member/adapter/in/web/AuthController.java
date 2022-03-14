@@ -1,7 +1,7 @@
 package ordilov.lissn.member.adapter.in.web;
 
 import lombok.RequiredArgsConstructor;
-import ordilov.lissn.common.interfaces.CommonResponse;
+import ordilov.lissn.common.adapter.CommonResponse;
 import ordilov.lissn.member.adapter.in.web.AuthDto.RefreshTokenDto;
 import ordilov.lissn.member.application.port.in.AuthCommand;
 import ordilov.lissn.member.domain.AuthInfo.RefreshInfo;

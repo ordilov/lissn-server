@@ -1,4 +1,4 @@
-package ordilov.lissn.common.interfaces;
+package ordilov.lissn.common.adapter;
 
 import java.util.Base64;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package ordilov.lissn.common.exception;
+package ordilov.lissn.common.domain.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

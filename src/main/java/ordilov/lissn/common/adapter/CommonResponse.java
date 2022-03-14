@@ -1,8 +1,8 @@
-package ordilov.lissn.common.interfaces;
+package ordilov.lissn.common.adapter;
 
 import lombok.Builder;
 import lombok.Getter;
-import ordilov.lissn.common.exception.ErrorCode;
+import ordilov.lissn.common.domain.exception.ErrorCode;
 
 @Getter
 @Builder
