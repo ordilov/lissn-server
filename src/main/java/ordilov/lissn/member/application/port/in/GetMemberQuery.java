@@ -1,10 +1,10 @@
 package ordilov.lissn.member.application.port.in;
 
 import java.util.Optional;
-import ordilov.lissn.member.domain.MemberInfo;
+import ordilov.lissn.member.domain.MemberInfo.GetMemberInfo;
 
 public interface GetMemberQuery {
-  MemberInfo getMember(Long memberId);
+  GetMemberInfo getMember(Long memberId);
 
-  Optional<MemberInfo> getMemberByEmail(String email);
+  Optional<GetMemberInfo> getMemberByEmail(String email);
 }

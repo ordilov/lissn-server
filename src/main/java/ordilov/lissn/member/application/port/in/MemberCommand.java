@@ -1,27 +1,37 @@
 package ordilov.lissn.member.application.port.in;
 
-import lombok.Builder;
-import lombok.Getter;
-import ordilov.lissn.member.domain.Member;
+import lombok.Value;
 import ordilov.lissn.member.domain.AuthProvider;
+import ordilov.lissn.member.domain.Member;
 
-@Getter
-@Builder
 public class MemberCommand {
 
-  private final String id;
-  private final String name;
-  private final String email;
-  private final AuthProvider provider;
-  private final String profileImageUrl;
+  @Value
+  public static class RegisterCommand {
+    String id;
+    String name;
+    String email;
+    String picture;
+    AuthProvider provider;
 
-  public Member toEntity() {
-    return Member.builder()
-        .name(name)
-        .email(email)
-        .provider(provider)
-        .profileImageUrl(profileImageUrl)
-        .build();
+    public Member toEntity() {
+      return Member.builder()
+          .name(name)
+          .email(email)
+          .provider(provider)
+          .picture(picture)
+          .build();
+    }
+
+
   }
+
+  @Value
+  public static class UpdateCommand {
+    Long id;
+    String name;
+    String picture;
+  }
+
 
 }

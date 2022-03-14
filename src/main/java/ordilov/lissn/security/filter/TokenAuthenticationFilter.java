@@ -1,6 +1,5 @@
 package ordilov.lissn.security.filter;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -12,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ordilov.lissn.common.exception.ErrorCode;
+import ordilov.lissn.member.domain.AuthInfo.TokenInfo;
 import ordilov.lissn.security.TokenProvider;
 import ordilov.lissn.security.userinfo.UserPrincipal;
 import org.springframework.context.annotation.Configuration;
@@ -42,8 +42,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     ErrorCode errorCode = null;
     try {
       tokenProvider.validateToken(jwt);
-      Claims claims = tokenProvider.getClaims(jwt);
-      UserPrincipal userPrincipal = new UserPrincipal(claims);
+      TokenInfo tokenInfo = tokenProvider.getTokenInfo(jwt);
+      UserPrincipal userPrincipal = new UserPrincipal(tokenInfo);
       OAuth2AuthenticationToken authentication = new OAuth2AuthenticationToken(userPrincipal,
           null, "google");
       authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

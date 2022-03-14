@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import ordilov.lissn.member.application.port.in.AuthCommand;
 import ordilov.lissn.member.application.port.in.GetMemberQuery;
 import ordilov.lissn.member.domain.AuthProvider;
-import ordilov.lissn.member.domain.MemberInfo;
+import ordilov.lissn.member.domain.MemberInfo.GetMemberInfo;
 import ordilov.lissn.security.exception.OAuth2AuthenticationProcessingException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -47,7 +47,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
       throw new OAuth2AuthenticationProcessingException("OAuth2 인증 정보에 이메일이 존재하지 않습니다.");
     }
 
-    MemberInfo memberInfo = getMemberQuery.getMemberByEmail(oAuth2UserInfo.getEmail())
+    GetMemberInfo memberInfo = getMemberQuery.getMemberByEmail(oAuth2UserInfo.getEmail())
         .orElseGet(() -> authCommand.signUp(oAuth2UserInfo.of()));
 
     return new UserPrincipal(memberInfo.getId(), memberInfo.getProvider(),

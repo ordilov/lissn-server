@@ -7,6 +7,9 @@ import java.security.Key;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import ordilov.lissn.config.AppProperties;
+import ordilov.lissn.member.domain.AuthInfo.TokenInfo;
+import ordilov.lissn.member.domain.AuthProvider;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -23,16 +26,36 @@ public class TokenProvider {
     key = Keys.hmacShaKeyFor(appProperties.getTokenSecret().getBytes());
   }
 
-  public String createToken(Claims claims) {
+  public String createToken(TokenInfo tokenInfo){
+    Claims claims = getClaims(tokenInfo);
     return buildJwt("ACCESS_TOKEN", claims);
   }
 
-  public String createRefreshToken(Claims claims) {
+  public String createRefreshToken(TokenInfo tokenInfo){
+    Claims claims = getClaims(tokenInfo);
     return buildJwt("REFRESH_TOKEN", claims);
   }
 
-  public Claims getClaims(String token) {
-    return parseClaims(token);
+  @NotNull
+  private Claims getClaims(TokenInfo tokenInfo) {
+    Claims claims = Jwts.claims();
+    claims.put("id", tokenInfo.getId());
+    claims.put("provider", tokenInfo.getProvider());
+    claims.put("name", tokenInfo.getName());
+    claims.put("email", tokenInfo.getEmail());
+    claims.put("picture", tokenInfo.getPicture());
+    return claims;
+  }
+
+  public TokenInfo getTokenInfo(String token) {
+    Claims claims = parseClaims(token);
+    return new TokenInfo(
+        claims.get("id", Long.class),
+        claims.get("name", String.class),
+        claims.get("email", String.class),
+        claims.get("picture", String.class),
+        AuthProvider.valueOf(claims.get("provider", String.class))
+    );
   }
 
   public void validateToken(String authToken) {
@@ -52,7 +75,6 @@ public class TokenProvider {
         .setSubject(subject)
         .addClaims(claims)
         .compact();
-
   }
 
   private Claims parseClaims(String token) {

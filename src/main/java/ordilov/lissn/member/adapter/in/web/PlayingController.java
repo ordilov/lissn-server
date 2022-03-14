@@ -2,7 +2,7 @@ package ordilov.lissn.member.adapter.in.web;
 
 import lombok.RequiredArgsConstructor;
 import ordilov.lissn.common.interfaces.CommonResponse;
-import ordilov.lissn.member.adapter.in.web.MemberDto.ChangePlayingRequest;
+import ordilov.lissn.member.adapter.in.web.PlayingDto.ChangePlayingRequest;
 import ordilov.lissn.member.application.port.in.GetPlayingQuery;
 import ordilov.lissn.member.application.port.in.PlayCommand;
 import ordilov.lissn.member.domain.playing.PlayingInfo;

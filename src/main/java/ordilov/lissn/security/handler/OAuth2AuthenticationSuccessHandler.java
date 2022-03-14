@@ -14,6 +14,7 @@ import ordilov.lissn.security.HttpCookieOAuth2AuthorizationRequestRepository;
 import ordilov.lissn.security.TokenProvider;
 import ordilov.lissn.security.userinfo.UserPrincipal;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.core.OAuth2RefreshToken;
@@ -51,8 +52,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
         .map(Cookie::getValue);
     UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-    String token = tokenProvider.createToken(userPrincipal.toClaims());
-    String refreshToken = tokenProvider.createRefreshToken(userPrincipal.toClaims());
+    String token = tokenProvider.createToken(userPrincipal.getTokenInfo());
+    String refreshToken = tokenProvider.createRefreshToken(userPrincipal.getTokenInfo());
     String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
     return UriComponentsBuilder.fromUriString(targetUrl)

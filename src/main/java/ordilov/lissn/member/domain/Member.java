@@ -47,7 +47,7 @@ public class Member extends BaseEntity {
   private String refreshToken;
 
   @Column(length = 250)
-  private String profileImageUrl;
+  private String picture;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
@@ -61,18 +61,18 @@ public class Member extends BaseEntity {
   private final List<Playing> playings = new ArrayList<>();
 
   @Builder
-  public Member(String name, String email, String refreshToken, String profileImageUrl,
+  public Member(String name, String email, String refreshToken, String picture,
       AuthProvider provider) {
     this.name = name;
     this.email = email;
     this.refreshToken = refreshToken;
-    this.profileImageUrl = profileImageUrl;
+    this.picture = picture;
     this.provider = provider;
   }
 
-  public void updateProfile(String name, String profileImageUrl) {
+  public void updateProfile(String name, String picture) {
     this.name = name;
-    this.profileImageUrl = profileImageUrl;
+    this.picture = picture;
   }
 
   public void playTrack(Long playOrder) {

@@ -3,7 +3,7 @@ package ordilov.lissn.common;
 import java.util.Collections;
 import java.util.Map;
 import ordilov.lissn.member.domain.Member;
-import ordilov.lissn.member.domain.MemberInfo;
+import ordilov.lissn.member.domain.MemberInfo.GetMemberInfo;
 import ordilov.lissn.security.userinfo.UserPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,7 +20,7 @@ public class WithMockCustomUserSecurityContextFactory implements
     SecurityContext context = SecurityContextHolder.createEmptyContext();
 
     Member member = MemberTestData.defaultMember();
-    MemberInfo memberInfo = new MemberInfo(member);
+    GetMemberInfo memberInfo = new GetMemberInfo(member);
 
     Map<String, Object> attributes = Collections.singletonMap("memberInfo", memberInfo);
 

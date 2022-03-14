@@ -24,6 +24,6 @@ class MemberTest {
     member.updateProfile("newName", "newImage");
 
     assertThat(member.getName()).isEqualTo("newName");
-    assertThat(member.getProfileImageUrl()).isEqualTo("newImage");
+    assertThat(member.getPicture()).isEqualTo("newImage");
   }
 }

@@ -27,6 +27,8 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     if (errorCode == null) {
       errorCode = ErrorCode.UNAUTHORIZED;
     }
+    log.error("에러 코드 - {}", errorCode.getMessage());
+
 
     ObjectMapper mapper = new ObjectMapper();
     String error = mapper.writeValueAsString(CommonResponse.fail(errorCode));

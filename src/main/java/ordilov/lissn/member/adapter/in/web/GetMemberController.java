@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ordilov.lissn.common.interfaces.CommonResponse;
 import ordilov.lissn.member.application.port.in.GetMemberQuery;
-import ordilov.lissn.member.domain.MemberInfo;
+import ordilov.lissn.member.domain.MemberInfo.GetMemberInfo;
 import ordilov.lissn.security.userinfo.UserPrincipal;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,14 +22,14 @@ public class GetMemberController {
   private final GetMemberQuery getMemberQuery;
 
   @GetMapping(value = "/{memberId}")
-  public CommonResponse<MemberInfo> findMember(@PathVariable Long memberId) {
+  public CommonResponse<GetMemberInfo> findMember(@PathVariable Long memberId) {
     var memberInfo = getMemberQuery.getMember(memberId);
     return CommonResponse.success(memberInfo);
   }
 
   @GetMapping(value = "/me")
   @PreAuthorize("hasRole('USER')")
-  public CommonResponse<MemberInfo> getCurrentMember(
+  public CommonResponse<GetMemberInfo> getCurrentMember(
       @AuthenticationPrincipal UserPrincipal userPrincipal) {
     var memberInfo = getMemberQuery.getMember(userPrincipal.getId());
     return CommonResponse.success(memberInfo);

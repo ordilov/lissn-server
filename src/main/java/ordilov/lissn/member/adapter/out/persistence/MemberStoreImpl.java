@@ -1,12 +1,15 @@
 package ordilov.lissn.member.adapter.out.persistence;
 
 import lombok.RequiredArgsConstructor;
-import ordilov.lissn.member.application.port.in.MemberCommand;
+import lombok.extern.slf4j.Slf4j;
+import ordilov.lissn.member.application.port.in.MemberCommand.UpdateCommand;
 import ordilov.lissn.member.application.port.out.MemberStore;
 import ordilov.lissn.member.domain.Member;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+
+@Slf4j
+@Repository
 @RequiredArgsConstructor
 public class MemberStoreImpl implements MemberStore {
 
@@ -18,7 +21,11 @@ public class MemberStoreImpl implements MemberStore {
   }
 
   @Override
-  public void update(Member member, MemberCommand command) {
-    member.updateProfile(command.getName(), command.getProfileImageUrl());
+  public Member update(UpdateCommand command) {
+    Member member = memberRepository.
+        findById(command.getId()).orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+    member.updateProfile(command.getName(), command.getPicture());
+    log.info("member: {}", member);
+    return member;
   }
 }
