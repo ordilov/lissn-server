@@ -29,6 +29,19 @@ spring:
               - email
               - profile
 
+cloud:
+  aws:
+    s3:
+      bucket: lissn-s3
+    region:
+      static: ap-northeast-2
+    credentials:
+      access-key: access-key
+      secret-key: secret-key
+    stack:
+      auto: false
+
+
 auth:
   token-secret: tokensecretkeyrandomkeysecretrandom
   token-expiration: 3600000
