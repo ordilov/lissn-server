@@ -6,8 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ordilov.lissn.common.exception.ErrorCode;
-import ordilov.lissn.common.interfaces.CommonResponse;
+import ordilov.lissn.common.domain.exception.ErrorCode;
+import ordilov.lissn.common.adapter.CommonResponse;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -28,7 +28,6 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
       errorCode = ErrorCode.UNAUTHORIZED;
     }
     log.error("에러 코드 - {}", errorCode.getMessage());
-
 
     ObjectMapper mapper = new ObjectMapper();
     String error = mapper.writeValueAsString(CommonResponse.fail(errorCode));

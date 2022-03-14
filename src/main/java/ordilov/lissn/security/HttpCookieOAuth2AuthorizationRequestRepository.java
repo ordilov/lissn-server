@@ -1,12 +1,12 @@
 package ordilov.lissn.security;
 
-import static ordilov.lissn.common.interfaces.CookieUtils.OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME;
-import static ordilov.lissn.common.interfaces.CookieUtils.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static ordilov.lissn.common.adapter.CookieUtils.OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME;
+import static ordilov.lissn.common.adapter.CookieUtils.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import ordilov.lissn.common.interfaces.CookieUtils;
+import ordilov.lissn.common.adapter.CookieUtils;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.stereotype.Component;

@@ -21,9 +21,11 @@ class MemberTest {
   @DisplayName("프로필을 변경한다.")
   void updateProfile() {
     Member member = defaultMember();
-    member.updateProfile("newName", "newImage");
+    member.updateName("newName");
+    member.updatePicture("newPicture");
+
 
     assertThat(member.getName()).isEqualTo("newName");
-    assertThat(member.getPicture()).isEqualTo("newImage");
+    assertThat(member.getPicture()).isEqualTo("newPicture");
   }
 }

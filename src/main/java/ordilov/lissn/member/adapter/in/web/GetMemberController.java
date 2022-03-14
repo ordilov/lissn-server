@@ -2,7 +2,7 @@ package ordilov.lissn.member.adapter.in.web;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ordilov.lissn.common.interfaces.CommonResponse;
+import ordilov.lissn.common.adapter.CommonResponse;
 import ordilov.lissn.member.application.port.in.GetMemberQuery;
 import ordilov.lissn.member.domain.MemberInfo.GetMemberInfo;
 import ordilov.lissn.security.userinfo.UserPrincipal;

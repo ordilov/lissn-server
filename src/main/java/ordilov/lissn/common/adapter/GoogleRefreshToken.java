@@ -1,4 +1,4 @@
-package ordilov.lissn.common.interfaces;
+package ordilov.lissn.common.adapter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

@@ -8,7 +8,7 @@ import static ordilov.lissn.playlist.interfaces.PlaylistDto.UpdateRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ordilov.lissn.common.interfaces.CommonResponse;
+import ordilov.lissn.common.adapter.CommonResponse;
 import ordilov.lissn.playlist.application.PlaylistFacade;
 import ordilov.lissn.playlist.domain.PlaylistCommand.PlaylistCreateRequest;
 import ordilov.lissn.playlist.domain.PlaylistCommand.PlaylistDeleteRequest;

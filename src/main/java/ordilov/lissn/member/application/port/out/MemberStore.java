@@ -5,5 +5,7 @@ import ordilov.lissn.member.domain.Member;
 
 public interface MemberStore {
     Member store(Member member);
-    Member update(UpdateCommand command);
+    Member updateName(Long id, String name);
+
+    Member updatePicture(Long id, String picture);
 }

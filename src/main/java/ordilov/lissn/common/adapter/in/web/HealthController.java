@@ -1,4 +1,4 @@
-package ordilov.lissn.common.interfaces;
+package ordilov.lissn.common.adapter.in.web;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

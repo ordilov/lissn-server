@@ -1,13 +1,13 @@
 package ordilov.lissn.security.handler;
 
-import static ordilov.lissn.common.interfaces.CookieUtils.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static ordilov.lissn.common.adapter.CookieUtils.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 import java.io.IOException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import ordilov.lissn.common.interfaces.CookieUtils;
+import ordilov.lissn.common.adapter.CookieUtils;
 import ordilov.lissn.security.HttpCookieOAuth2AuthorizationRequestRepository;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;

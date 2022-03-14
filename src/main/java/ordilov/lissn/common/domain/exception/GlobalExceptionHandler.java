@@ -1,6 +1,6 @@
-package ordilov.lissn.common.exception;
+package ordilov.lissn.common.domain.exception;
 
-import ordilov.lissn.common.interfaces.CommonResponse;
+import ordilov.lissn.common.adapter.CommonResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

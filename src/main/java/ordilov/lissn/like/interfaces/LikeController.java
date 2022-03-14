@@ -2,7 +2,7 @@ package ordilov.lissn.like.interfaces;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ordilov.lissn.common.interfaces.CommonResponse;
+import ordilov.lissn.common.adapter.CommonResponse;
 import ordilov.lissn.like.application.LikeFacade;
 import ordilov.lissn.like.domain.LikeInfo.LikedPlaylistInfo;
 import ordilov.lissn.like.domain.LikeInfo.LikedTrackInfo;

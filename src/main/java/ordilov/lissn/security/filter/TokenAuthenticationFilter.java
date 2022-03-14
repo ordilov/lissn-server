@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ordilov.lissn.common.exception.ErrorCode;
+import ordilov.lissn.common.domain.exception.ErrorCode;
 import ordilov.lissn.member.domain.AuthInfo.TokenInfo;
 import ordilov.lissn.security.TokenProvider;
 import ordilov.lissn.security.userinfo.UserPrincipal;
