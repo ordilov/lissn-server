@@ -101,8 +101,6 @@ jacocoTestCoverageVerification {
     }
 }
 
-
-
 // querydsl
 def querydslDir = "$buildDir/generated/querydsl"
 querydsl {
