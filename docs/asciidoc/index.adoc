@@ -1,0 +1,60 @@
+:hardbreaks:
+ifndef::snippets[]
+:snippets: ../../../target/generated-snippets
+endif::[]
+:title: Lissn API 문서
+:toc-title: Lissn 프로젝트 목차
+:toc: left
+:toclevels: 2
+:doctype: book
+:author: 이인후
+:sectlinks:
+:source-highlighter: highlight.js
+
+[#overview]
+== 소개
+
+Lissn API 문서입니다.
+
+== HTTP 요청 메소드
+
+|===
+| 요청 메소드 | 설명
+
+| `GET`
+| 리소스를 요청합니다.
+
+| `POST`
+| 새로운 리소스를 생성합니다.
+
+| `PATCH`
+| 리소스를 부분적으로 수정합니다.
+|===
+
+== HTTP 응답 상태 코드
+
+|===
+| 상태 코드 | 설명
+
+| `200 OK`
+| 요청을 성공했습니다.
+
+| `201 Created`
+| 새 리소스를 성공적으로 생성했습니다.
+
+| `400 Bad Request`
+| 잘못된 요청입니다.
+
+| `404 Not Found`
+| 요청한 리소스를 찾을 수 없습니다
+
+| `500 Interal Server Error`
+| 서버에서 에러가 발생했습니다.
+|===
+
+== Lissn API
+
+=== 플레이리스트
+
+.Http Request
+include::{snippets}/get-random-playlist/http-request.adoc[]
