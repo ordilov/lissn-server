@@ -16,7 +16,7 @@ class PlaylistMapper {
 
     fun of(playlistWithLike: PlaylistWithLike): Main {
         return Main(
-            id = playlistWithLike.id,
+            id = playlistWithLike.id!!,
             title = playlistWithLike.title,
             items = playlistWithLike.items,
             isLiked = playlistWithLike.isLiked

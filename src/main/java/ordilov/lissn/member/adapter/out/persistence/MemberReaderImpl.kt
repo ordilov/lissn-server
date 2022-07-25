@@ -1,6 +1,6 @@
 package ordilov.lissn.member.adapter.out.persistence
 
-import MemberReader
+import ordilov.lissn.member.application.port.out.MemberReader
 import ordilov.lissn.member.domain.Member
 import org.springframework.stereotype.Component
 

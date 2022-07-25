@@ -19,9 +19,9 @@ class GetPlaylistController(
 
     @GetMapping("/random")
     fun getRandomPlaylist(
-        @AuthenticationPrincipal userPrincipal: UserPrincipal?
+        @AuthenticationPrincipal userPrincipal: UserPrincipal
     ): ResponseEntity<Main> {
-        val memberId = userPrincipal?.id!!
+        val memberId = userPrincipal.id
         return ResponseEntity.ok(getPlaylistQuery.getRandomPlaylist(memberId))
     }
 

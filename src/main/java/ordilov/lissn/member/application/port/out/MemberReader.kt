@@ -1,3 +1,5 @@
+package ordilov.lissn.member.application.port.out
+
 import ordilov.lissn.member.domain.Member
 
 interface MemberReader {

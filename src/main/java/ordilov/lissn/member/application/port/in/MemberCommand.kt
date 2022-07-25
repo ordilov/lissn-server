@@ -8,12 +8,10 @@ data class RegisterCommand(
     val email: String,
     val picture: String,
     val provider: AuthProvider
-) {
-}
+)
 
 data class UpdateCommand(
     val id: Long,
     val name: String,
     val picture: String
-) {
-}
+)

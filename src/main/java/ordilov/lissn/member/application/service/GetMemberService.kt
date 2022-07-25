@@ -1,6 +1,6 @@
 package ordilov.lissn.member.application.service;
 
-import MemberReader
+import ordilov.lissn.member.application.port.out.MemberReader
 import ordilov.lissn.member.application.port.`in`.GetMemberQuery
 import ordilov.lissn.member.domain.GetMemberInfo
 import org.springframework.stereotype.Service

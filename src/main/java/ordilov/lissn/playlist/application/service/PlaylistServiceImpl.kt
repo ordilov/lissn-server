@@ -1,6 +1,6 @@
 package ordilov.lissn.playlist.application.service;
 
-import MemberReader
+import ordilov.lissn.member.application.port.out.MemberReader
 import ordilov.lissn.playlist.application.port.`in`.*
 import ordilov.lissn.playlist.application.port.out.PlaylistReader
 import ordilov.lissn.playlist.application.port.out.PlaylistStore

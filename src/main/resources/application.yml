@@ -49,4 +49,3 @@ auth:
   token-refresh-expiration: ${TOKEN_REFRESH_EXPIRATION}
   authorized-redirect-urls:
     - ${AUTHORIZED_REDIRECT_URL}
-

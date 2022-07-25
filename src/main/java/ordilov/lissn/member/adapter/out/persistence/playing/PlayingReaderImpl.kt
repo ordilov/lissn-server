@@ -8,7 +8,7 @@
 //
 //@Repository
 //class PlayingReaderImpl(
-//    val memberReader: MemberReader,
+//    val memberReader: ordilov.lissn.member.application.port.out.MemberReader,
 //    val queryFactory: JPAQueryFactory
 //) : ordilov.lissn.member.domain.playing.PlayingReader {
 //

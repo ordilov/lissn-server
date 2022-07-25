@@ -1,6 +1,6 @@
 package ordilov.lissn.member.application.service
 
-import MemberReader
+import ordilov.lissn.member.application.port.out.MemberReader
 import ordilov.lissn.member.application.port.`in`.PlayCommand
 import ordilov.lissn.member.domain.playing.Playing
 import ordilov.lissn.member.domain.playing.PlayingPlaylistDto

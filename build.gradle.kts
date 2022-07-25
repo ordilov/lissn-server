@@ -1,11 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
-    repositories {
-        maven("https://plugins.gradle.org/m2/")
-        mavenCentral()
-    }
-
     dependencies {
         classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:1.0.10")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.61")
@@ -27,6 +22,7 @@ java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
+    maven("https://plugins.gradle.org/m2/")
 }
 
 dependencies {
@@ -49,12 +45,9 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
 
     //querydsl
-    api("com.querydsl:querydsl-jpa:4.2.2")
-    kapt("com.querydsl:querydsl-apt:4.2.2:jpa")
+    api("com.querydsl:querydsl-jpa")
+    kapt(group = "com.querydsl", name = "querydsl-apt", classifier = "jpa")
     kapt("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final")
-
-//    // log query
-//    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
 
     // log slack
     implementation("com.github.maricn:logback-slack-appender:1.6.1")

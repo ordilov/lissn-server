@@ -2,6 +2,7 @@ package ordilov.lissn.playlist.domain
 
 import ordilov.lissn.member.domain.playing.Playing
 import ordilov.lissn.track.domain.Track
+import java.lang.reflect.Constructor
 
 data class Main(
     val id: Long,
@@ -17,7 +18,7 @@ data class Info(
     val author: String,
     val authorId: Long,
     val isLiked: Boolean,
-    val items: List<Item>
+    var items: List<Item>
 ) {
 }
 
@@ -42,24 +43,19 @@ data class Item(
     constructor(playing: Playing, isLiked: Boolean) : this(
         playing.id,
         playing.track.title,
-        playing.track.id!!,
+        playing.track.id,
         playing.track.resourceId,
         isLiked
-    ) {
-    }
+    )
 }
 
 data class PlaylistWithLike(
-    val id: Long,
+    val id: Long?,
     val title: String,
     val isLiked: Boolean,
     val items: List<Item>
-) {
-
-}
-
+)
 data class PlaylistTrackDto(
     val playlist: Playlist,
     val track: Track
-) {
-}
+)

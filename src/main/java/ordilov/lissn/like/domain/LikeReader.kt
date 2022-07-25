@@ -1,3 +1,5 @@
+package ordilov.lissn.like.domain
+
 import ordilov.lissn.like.domain.LikedPlaylist
 import ordilov.lissn.like.domain.LikedTrack
 import ordilov.lissn.member.domain.Member

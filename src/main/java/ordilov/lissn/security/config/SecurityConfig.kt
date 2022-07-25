@@ -19,7 +19,7 @@ class SecurityConfig(
     val customOAuth2UserService: CustomOAuth2UserService,
     val tokenAuthenticationFilter: TokenAuthenticationFilter,
     val restAuthenticationEntryPoint: AuthenticationEntryPoint,
-    val customAuthorizationRequestResolver: CustomAuthorizationRequestResolver,
+//    val customAuthorizationRequestResolver: CustomAuthorizationRequestResolver,
     val oAuth2AuthenticationSuccessHandler: OAuth2AuthenticationSuccessHandler,
     val oAuth2AuthenticationFailureHandler: OAuth2AuthenticationFailureHandler,
     val httpCookieOAuth2AuthorizationRequestRepository: HttpCookieOAuth2AuthorizationRequestRepository
@@ -45,7 +45,7 @@ class SecurityConfig(
             .oauth2Login {
                 it.authorizationEndpoint {
                     it.baseUri("/oauth2/authorize")
-                        .authorizationRequestResolver(customAuthorizationRequestResolver)
+//                        .authorizationRequestResolver(customAuthorizationRequestResolver)
                         .authorizationRequestRepository(
                             httpCookieOAuth2AuthorizationRequestRepository
                         )

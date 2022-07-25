@@ -1,6 +1,6 @@
 package ordilov.lissn.like.infrastructure
 
-import LikeReader
+import ordilov.lissn.like.domain.LikeReader
 import ordilov.lissn.like.domain.LikedPlaylist
 import ordilov.lissn.like.domain.LikedTrack
 import ordilov.lissn.member.domain.Member

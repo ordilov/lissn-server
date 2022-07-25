@@ -28,7 +28,7 @@ class TokenAuthenticationFilter(
         filterChain: FilterChain
     ) {
         val jwt = getJwtFromRequest(request)
-        if (!StringUtils.hasText(jwt)) {
+        if (jwt.isBlank()) {
             filterChain.doFilter(request, response)
             return
         }
@@ -41,8 +41,8 @@ class TokenAuthenticationFilter(
                 userPrincipal,
                 null, "google"
             );
-            authentication.setDetails(WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
+            SecurityContextHolder.getContext().authentication = authentication
         } catch (e: Exception) {
             errorCode = when (e) {
                 is ExpiredJwtException -> ErrorCode.EXPIRED_TOKEN

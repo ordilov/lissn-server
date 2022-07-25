@@ -22,12 +22,12 @@ class TokenProvider(appProperties: AppProperties) {
         key = Keys.hmacShaKeyFor(appProperties.tokenSecret?.toByteArray())
     }
 
-    fun createToken(tokenInfo: TokenInfo): String{
+    fun createToken(tokenInfo: TokenInfo): String {
         val claims = getClaims(tokenInfo)
         return buildJwt("ACCESS_TOKEN", claims)
     }
 
-    fun createRefreshToken(tokenInfo: TokenInfo): String{
+    fun createRefreshToken(tokenInfo: TokenInfo): String {
         val claims = getClaims(tokenInfo)
         return buildJwt("REFRESH_TOKEN", claims)
     }
@@ -45,7 +45,7 @@ class TokenProvider(appProperties: AppProperties) {
     fun getTokenInfo(token: String): TokenInfo {
         val claims = parseClaims(token)
         return TokenInfo(
-            claims.get("id", Long::class.java),
+            claims.get("id", Integer::class.java).toLong(),
             claims.get("name", String::class.java),
             claims.get("email", String::class.java),
             claims.get("picture", String::class.java),
